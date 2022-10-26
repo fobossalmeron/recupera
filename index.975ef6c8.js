@@ -31143,21 +31143,43 @@ parcelHelpers.export(exports, "OuterField", ()=>OuterField);
 parcelHelpers.export(exports, "Field", ()=>Field);
 var _styledComponents = require("styled-components");
 var _styledComponentsDefault = parcelHelpers.interopDefault(_styledComponents);
-const OuterField = (0, _styledComponentsDefault.default).div.withConfig({
-    displayName: "Field__OuterField",
-    componentId: "sc-1w3rqip-0"
-})([
-    "display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;gap:10px;"
-]);
-const Field = (0, _styledComponentsDefault.default).input.withConfig({
-    displayName: "Field",
-    componentId: "sc-1w3rqip-1"
-})([
-    "font-family:inherit;box-sizing:border-box;font-size:1.1rem;font-weight:300;font-style:normal;&::placeholder{font-style:normal;}display:flex;flex-direction:row;align-items:center;padding:16px 20px;gap:8px;border-radius:50px;width:100%px;background:#ffffff;border:2px solid;border-color:",
-    ";&:focus,&:active{border-color:",
-    ";outline-color:",
-    ";}flex:none;order:0;align-self:stretch;flex-grow:0;"
-], (p)=>p.error ? "#E7414C" : "#838994", (p)=>p.error ? "#E7414C" : "#7368f8", (p)=>p.error ? "#E7414C" : "#7368f8");
+const OuterField = (0, _styledComponentsDefault.default).div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+`;
+const Field = (0, _styledComponentsDefault.default).input`
+font-family: inherit;
+  box-sizing: border-box;
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: normal;
+  &::placeholder {
+    font-style: normal;
+  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 8px;
+  border-radius: 50px;
+  width: 100%px;
+  background: #ffffff;
+  border: 2px solid;
+  border-color: ${(p)=>p.error ? "#E7414C" : "#838994"};
+  &:focus,
+  &:active {
+    border-color: ${(p)=>p.error ? "#E7414C" : "#7368f8"};
+    outline-color: ${(p)=>p.error ? "#E7414C" : "#7368f8"};
+  }
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+`;
 
 },{"styled-components":"1U3k6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kttpQ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
