@@ -1,14 +1,14 @@
 {
   "name": "yes",
   "version": "yes",
-  "main": "index.js",
   "repository": "https://github.com/fobossalmeron/recupera.git",
   "author": "Rodrigo Salmeron <fobos.salmeron@gmail.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
     "dev": "parcel src/index.html --open",
-    "build": "parcel build index.html"
+    "predeploy": "rm -rf dist && parcel build index.html --public-url https://fobossalmeron.github.io/recupera/",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "babel-plugin-styled-components": "^2.0.7",
@@ -20,6 +20,8 @@
   "devDependencies": {
     "@babel/core": "^7.12.0",
     "parcel": "^2.7.0",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "shx": "^0.3.2",
+    "gh-pages": "^2.0.1"
   }
 }
