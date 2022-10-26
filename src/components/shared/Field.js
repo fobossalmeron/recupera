@@ -15,6 +15,7 @@ font-family: inherit;
   font-size: 1.1rem;
   font-weight: 300;
   font-style: normal;
+  -webkit-tap-highlight-color: transparent;
   &::placeholder {
     font-style: normal;
   }
@@ -28,6 +29,7 @@ font-family: inherit;
   background: #ffffff;
   border: 2px solid;
   border-color: ${(p) => (p.error ? "#E7414C" : "#838994")};
+  outline: none;
   &:focus,
   &:active {
     border-color: ${(p) => (p.error ? "#E7414C" : "#7368f8")};

@@ -53,6 +53,7 @@ function MainForm({ switchForm, show, areWeDone, setAreWeDone }) {
                 error={isDirty && !isValid}
                 id={`cp_sueldo`}
                 type="number"
+                pattern="[0-9]*"
                 placeholder={"Ingresa tu sueldo mensual"}
                 {...register("sueldo", {
                   required: true,
@@ -62,7 +63,7 @@ function MainForm({ switchForm, show, areWeDone, setAreWeDone }) {
             </>
           )}
         </OuterField>
-        <CTA type="submit" value="Calcular" show={!areWeDone} />
+        <CTA type="submit" value="Calcular" show={!areWeDone}/>
         <CTA
           as="a"
           href="https://recupera.io/prueba-la-versión-beta"
