@@ -28,8 +28,10 @@ const Wrapper = styled.div`
     width: 100%;
     label {
       color: #838994;
-      opacity: 0.7;
+      opacity: 0.8;
       font-size: 16px;
+      text-align: center;
+      max-width: 220px;
     }
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button,
