@@ -5,9 +5,10 @@ import Wrapper from "./shared/Wrapper";
 import { Field, OuterField } from "./shared/Field";
 import CTA from "./shared/CTA";
 import delayForLoading from "../utils/delayForLoading";
+import { NumericFormat } from "react-number-format";
 
 function MainForm({ switchForm, show, areWeDone, setAreWeDone }) {
-  const [salario, setSalario] = useState(0);
+  const [sueldo, setSueldo] = useState(0);
   const [saldoAFavor, setSaldoAFavor] = useState(0);
   const {
     register,
@@ -17,20 +18,30 @@ function MainForm({ switchForm, show, areWeDone, setAreWeDone }) {
 
   const onSubmit = (data) => {
     switchForm(true);
-    console.log(data);
-
-    delayForLoading(300).then(() => setSalario(data.sueldo));
+    delayForLoading(300).then(() => setSueldo(+data.sueldo));
     delayForLoading(500).then(() => setAreWeDone(true));
   };
 
   useEffect(() => {
-    console.log("salario is " + salario);
+    if (sueldo === 0) {
+      return;
+    }
+    let ingresosGravables = sueldo * 12;
+    let deduccionesPersonales = ingresosGravables * 0.15;
+    let baseGravable = ingresosGravables - deduccionesPersonales;
 
-    let calculation;
-    calculation = (salario * 12) / 15;
-    console.log(calculation);
-    setSaldoAFavor(calculation.toLocaleString());
-  }, [salario]);
+    console.log("sueldo mensual bruto $" + sueldo.toLocaleString());
+
+    console.log("Ingresos gravables $" + ingresosGravables.toLocaleString());
+
+    console.log(
+      "Deducciones personales $" + deduccionesPersonales.toLocaleString()
+    );
+
+    console.log("Base gravable $" + baseGravable.toLocaleString());
+
+    setSaldoAFavor(baseGravable.toLocaleString());
+  }, [sueldo]);
 
   return (
     <Wrapper show>
@@ -45,25 +56,22 @@ function MainForm({ switchForm, show, areWeDone, setAreWeDone }) {
               ? "Recuperable del SAT con un sueldo mensual de "
               : "Sueldo mensual"}
           </label>
-          {areWeDone && <NonEditable>${salario.toLocaleString()}</NonEditable>}
+          {areWeDone && <NonEditable>${sueldo.toLocaleString()}</NonEditable>}
           {!areWeDone && (
-            <>
-              <Field
-                name="sueldo"
-                error={isDirty && !isValid}
-                id={`cp_sueldo`}
-                type="number"
-                pattern="[0-9]*"
-                placeholder={"Ingresa tu sueldo mensual"}
-                {...register("sueldo", {
-                  required: true,
-                })}
-              />
-              {/* <Dollar active={isValid} /> */}
-            </>
+            <Field
+              name="sueldo"
+              error={isDirty && !isValid}
+              id={`cp_sueldo`}
+              type="number"
+              pattern="[0-9]*"
+              placeholder={"Ingresa tu sueldo mensual"}
+              {...register("sueldo", {
+                required: true,
+              })}
+            />
           )}
         </OuterField>
-        <CTA type="submit" value="Calcular" show={!areWeDone}/>
+        <CTA type="submit" value="Calcular" show={!areWeDone} />
         <CTA
           as="a"
           href="https://recupera.io/prueba-la-versión-beta"
@@ -126,15 +134,14 @@ const Tag = styled.div`
   font-size: 1.2rem;
   text-align: center;
   color: #7368f8;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 `;
 
 const SaldoNumber = styled.div`
-  width: 205px;
-  height: 49px;
+  width: 100%;
   font-weight: 500;
   text-align: center;
-  font-size: 49.7031px;
+  font-size: 3rem;
   line-height: 99%;
   text-align: center;
   color: #060809;

@@ -8,12 +8,10 @@ export function App() {
   const [areWeDone, setAreWeDone] = useState(false);
 
   const switchForm = (id) => {
-    console.log(id);
     setForm(id);
   };
 
   useEffect(() => {
-    console.log(form);
   }, [form]);
 
   return (
