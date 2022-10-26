@@ -5,5 +5,21 @@
   "repository": "https://github.com/fobossalmeron/recupera.git",
   "author": "Rodrigo Salmeron <fobos.salmeron@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "dev": "parcel src/index.html --open",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "babel-plugin-styled-components": "^2.0.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.38.0",
+    "styled-components": "^5.3.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.0",
+    "parcel": "^2.7.0",
+    "process": "^0.11.10"
+  }
 }
