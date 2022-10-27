@@ -5643,12 +5643,9 @@ function App() {
     const [form, setForm] = (0, _react.useState)(false);
     const [areWeDone, setAreWeDone] = (0, _react.useState)(false);
     const switchForm = (id)=>{
-        console.log(id);
         setForm(id);
     };
-    (0, _react.useEffect)(()=>{
-        console.log(form);
-    }, [
+    (0, _react.useEffect)(()=>{}, [
         form
     ]);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Container, {
@@ -5660,7 +5657,7 @@ function App() {
                 setAreWeDone: setAreWeDone
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 16,
+                lineNumber: 13,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _popupFormDefault.default), {
@@ -5668,13 +5665,13 @@ function App() {
                 show: form
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 17,
+                lineNumber: 14,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/App.js",
-        lineNumber: 15,
+        lineNumber: 12,
         columnNumber: 10
     }, this);
 }
@@ -7427,23 +7424,39 @@ var _delayForLoadingDefault = parcelHelpers.interopDefault(_delayForLoading);
 var _s = $RefreshSig$();
 function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
     _s();
-    const [salario, setSalario] = (0, _react.useState)(0);
+    const [sueldo, setSueldo] = (0, _react.useState)(0);
     const [saldoAFavor, setSaldoAFavor] = (0, _react.useState)(0);
-    const { register , formState: { errors , isDirty , isValid , isSubmitSuccessful  } , handleSubmit  } = (0, _reactHookForm.useForm)();
+    const { register , formState: { errors , isDirty , isValid , isSubmitSuccessful , control  } , handleSubmit  } = (0, _reactHookForm.useForm)({
+        mode: "onChange"
+    });
     const onSubmit = (data)=>{
         switchForm(true);
-        console.log(data);
-        (0, _delayForLoadingDefault.default)(300).then(()=>setSalario(data.sueldo));
+        (0, _delayForLoadingDefault.default)(300).then(()=>setSueldo(+data.sueldo));
         (0, _delayForLoadingDefault.default)(500).then(()=>setAreWeDone(true));
     };
     (0, _react.useEffect)(()=>{
-        console.log("salario is " + salario);
-        let calculation;
-        calculation = salario * 12 / 15;
-        console.log(calculation);
-        setSaldoAFavor(calculation.toLocaleString());
+        console.log(errors);
     }, [
-        salario
+        errors
+    ]);
+    (0, _react.useEffect)(()=>{
+        // if (sueldo === 0) {
+        //   return;
+        // }
+        setSueldo(1);
+        console.log("el sueldo es " + sueldo);
+        let ingresosGravables = sueldo * 12;
+        let deduccionesPersonales = ingresosGravables * 0.15;
+        let baseGravable = ingresosGravables - deduccionesPersonales;
+        console.log("sueldo mensual bruto $" + sueldo.toLocaleString());
+        console.log("Ingresos gravables $" + ingresosGravables.toLocaleString());
+        console.log("Deducciones personales $" + deduccionesPersonales.toLocaleString());
+        console.log("Base gravable $" + baseGravable.toLocaleString());
+        setSaldoAFavor(baseGravable.toLocaleString("es-MX", {
+            maximumFractionDigits: 0
+        }));
+    }, [
+        sueldo
     ]);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _wrapperDefault.default), {
         show: true,
@@ -7454,20 +7467,20 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                         children: "Saldo a favor"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 41,
+                        lineNumber: 56,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(SaldoNumber, {
                         children: areWeDone ? "$" + saldoAFavor : "$00,000"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 42,
+                        lineNumber: 57,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 40,
+                lineNumber: 55,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -7480,40 +7493,42 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 children: areWeDone ? "Recuperable del SAT con un sueldo mensual de " : "Sueldo mensual"
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 46,
+                                lineNumber: 61,
                                 columnNumber: 11
                             }, this),
                             areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NonEditable, {
                                 children: [
                                     "$",
-                                    salario.toLocaleString()
+                                    sueldo.toLocaleString("es-MX", {
+                                        maximumFractionDigits: 0
+                                    })
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 49,
+                                lineNumber: 64,
                                 columnNumber: 25
                             }, this),
-                            !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
-                                    name: "sueldo",
-                                    error: isDirty && !isValid,
-                                    id: `cp_sueldo`,
-                                    type: "number",
-                                    pattern: "[0-9]*",
-                                    placeholder: "Ingresa tu sueldo mensual",
-                                    ...register("sueldo", {
-                                        required: true
-                                    })
-                                }, void 0, false, {
-                                    fileName: "src/components/MainForm.js",
-                                    lineNumber: 51,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false)
+                            !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
+                                name: "sueldo",
+                                hasOwnError: isDirty && !isValid,
+                                id: `cp_sueldo`,
+                                type: "number",
+                                pattern: "[0-9]*",
+                                min: "5000",
+                                max: "1000000",
+                                placeholder: "Ingresa tu sueldo mensual",
+                                ...register("sueldo", {
+                                    required: true
+                                })
+                            }, void 0, false, {
+                                fileName: "src/components/MainForm.js",
+                                lineNumber: 69,
+                                columnNumber: 26
+                            }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 45,
+                        lineNumber: 60,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7522,7 +7537,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                         show: !areWeDone
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 57,
+                        lineNumber: 73,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7533,29 +7548,29 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                             "\xdanete el beta ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Arrow, {}, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 59,
+                                lineNumber: 75,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 58,
+                        lineNumber: 74,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 44,
+                lineNumber: 59,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/MainForm.js",
-        lineNumber: 39,
+        lineNumber: 54,
         columnNumber: 10
     }, this);
 }
-_s(MainForm, "E/h+DOQJRgRdRIR+Y8dl9m4dh70=", false, function() {
+_s(MainForm, "/QwjJsY6lPY+E2LRod3m7XKZtFw=", false, function() {
     return [
         (0, _reactHookForm.useForm)
     ];
@@ -7593,7 +7608,7 @@ const SaldoNumber = (0, _styledComponentsDefault.default).div.withConfig({
     displayName: "MainForm__SaldoNumber",
     componentId: "sc-x4h6rk-4"
 })([
-    "width:205px;height:49px;font-weight:500;text-align:center;font-size:49.7031px;line-height:99%;text-align:center;color:#060809;flex:none;order:0;flex-grow:0;"
+    "width:100%;font-weight:500;text-align:center;font-size:3rem;line-height:99%;text-align:center;color:#060809;flex:none;order:0;flex-grow:0;"
 ]);
 _c4 = SaldoNumber;
 var _c, _c1, _c2, _c3, _c4;
@@ -9561,7 +9576,7 @@ const Wrapper = (0, _styledComponentsDefault.default).div.withConfig({
     displayName: "Wrapper",
     componentId: "sc-1887e4u-0"
 })([
-    '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");font-family:"Inter",sans-serif;font-style:normal;font-weight:300;font-size:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:35px;gap:30px;width:auto;min-width:350px;background:#ffffff;box-shadow:0px 112.693px 169.039px rgba(40,3,109,0.12);border-radius:40px;form{gap:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;label{color:#838994;opacity:0.8;font-size:16px;text-align:center;max-width:220px;}input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}input[type="number"]{-moz-appearance:textfield;}input::placeholder{font-weight:inherit;}}*{box-sizing:border-box;}'
+    '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");font-family:"Inter",sans-serif;font-style:normal;font-weight:300;font-size:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:35px;gap:30px;width:auto;min-width:350px;background:#ffffff;box-shadow:0px 112.693px 169.039px rgba(40,3,109,0.12);border-radius:40px;form{gap:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;label{color:#838994;opacity:0.8;font-size:16px;text-align:center;max-width:220px;}input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}input[type="number"]{-moz-appearance:textfield;}input::placeholder{font-weight:inherit;text-align:center;}}*{box-sizing:border-box;}'
 ]);
 exports.default = Wrapper;
 
@@ -9582,11 +9597,11 @@ const Field = (0, _styledComponentsDefault.default).input.withConfig({
     displayName: "Field",
     componentId: "sc-1w3rqip-1"
 })([
-    "font-family:inherit;box-sizing:border-box;font-size:1.1rem;font-weight:300;font-style:normal;-webkit-tap-highlight-color:transparent;&::placeholder{font-style:normal;}display:flex;flex-direction:row;align-items:center;padding:16px 20px;gap:8px;border-radius:50px;width:100%px;background:#ffffff;border:2px solid;border-color:",
+    "font-family:inherit;box-sizing:border-box;font-size:1.1rem;font-weight:300;font-style:normal;-webkit-tap-highlight-color:transparent;&::placeholder{font-style:normal;transition:0.2s all;}text-align:center;display:flex;flex-direction:row;align-items:center;padding:16px 20px;gap:8px;border-radius:50px;width:100%px;background:#ffffff;border:2px solid;transition:0.2s ease;border-color:",
     ";outline:none;&:focus,&:active{border-color:",
     ";outline-color:",
-    ";}flex:none;order:0;align-self:stretch;flex-grow:0;"
-], (p)=>p.error ? "#E7414C" : "#838994", (p)=>p.error ? "#E7414C" : "#7368f8", (p)=>p.error ? "#E7414C" : "#7368f8");
+    ";&::placeholder{opacity:0;}}flex:none;order:0;align-self:stretch;flex-grow:0;"
+], (p)=>p.hasOwnError ? "#E7414C" : "#838994", (p)=>p.hasOwnError ? "#E7414C" : "#7368f8", (p)=>p.hasOwnError ? "#E7414C" : "#7368f8");
 
 },{"styled-components":"1U3k6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kttpQ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -9755,7 +9770,9 @@ var _s = $RefreshSig$();
 function PopupForm({ switchForm , show  }) {
     _s();
     const [salario, setSalario] = (0, _react.useState)(0);
-    const { register , formState: { errors , isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)();
+    const { register , formState: { errors , isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)({
+        mode: "onBlur"
+    });
     const onSubmit = (data)=>{
         console.log(data);
         switchForm(false);
@@ -9773,13 +9790,13 @@ function PopupForm({ switchForm , show  }) {
                         children: "tu resultado"
                     }, void 0, false, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 29,
+                        lineNumber: 31,
                         columnNumber: 34
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/PopupForm.js",
-                lineNumber: 28,
+                lineNumber: 30,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -9792,12 +9809,12 @@ function PopupForm({ switchForm , show  }) {
                                 children: "Tu email"
                             }, void 0, false, {
                                 fileName: "src/components/PopupForm.js",
-                                lineNumber: 33,
+                                lineNumber: 35,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
                                 name: "email",
-                                error: isDirty && !isValid,
+                                hasOwnError: isDirty && !isValid,
                                 id: `cp_email`,
                                 type: "email",
                                 placeholder: "Ingresa tu email",
@@ -9807,24 +9824,23 @@ function PopupForm({ switchForm , show  }) {
                                         value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i,
                                         message: "Email inv\xe1lido"
                                     }
-                                }),
-                                "aria-invalid": errors.email ? "true" : "false"
+                                })
                             }, void 0, false, {
                                 fileName: "src/components/PopupForm.js",
-                                lineNumber: 34,
+                                lineNumber: 36,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 32,
+                        lineNumber: 34,
                         columnNumber: 9
                     }, this),
                     errors?.email?.type === "pattern" && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _errorMessageDefault.default), {
                         children: "Necesitamos un correo real \uD83D\uDE14"
                     }, void 0, false, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 42,
+                        lineNumber: 44,
                         columnNumber: 47
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -9833,19 +9849,19 @@ function PopupForm({ switchForm , show  }) {
                         show: true
                     }, void 0, false, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 44,
+                        lineNumber: 46,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/PopupForm.js",
-                lineNumber: 31,
+                lineNumber: 33,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/PopupForm.js",
-        lineNumber: 27,
+        lineNumber: 29,
         columnNumber: 10
     }, this);
 }
