@@ -7443,7 +7443,6 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
         // if (sueldo === 0) {
         //   return;
         // }
-        setSueldo(1);
         console.log("el sueldo es " + sueldo);
         let ingresosGravables = sueldo * 12;
         let deduccionesPersonales = ingresosGravables * 0.15;
@@ -7467,20 +7466,20 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                         children: "Saldo a favor"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 56,
+                        lineNumber: 55,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(SaldoNumber, {
                         children: areWeDone ? "$" + saldoAFavor : "$00,000"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 57,
+                        lineNumber: 56,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 55,
+                lineNumber: 54,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -7493,7 +7492,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 children: areWeDone ? "Recuperable del SAT con un sueldo mensual de " : "Sueldo mensual"
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 61,
+                                lineNumber: 60,
                                 columnNumber: 11
                             }, this),
                             areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NonEditable, {
@@ -7505,7 +7504,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 64,
+                                lineNumber: 63,
                                 columnNumber: 25
                             }, this),
                             !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
@@ -7522,13 +7521,13 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 })
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 69,
+                                lineNumber: 68,
                                 columnNumber: 26
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 60,
+                        lineNumber: 59,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7537,7 +7536,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                         show: !areWeDone
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 73,
+                        lineNumber: 72,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7548,25 +7547,25 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                             "\xdanete el beta ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Arrow, {}, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 75,
+                                lineNumber: 74,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 74,
+                        lineNumber: 73,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 59,
+                lineNumber: 58,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/MainForm.js",
-        lineNumber: 54,
+        lineNumber: 53,
         columnNumber: 10
     }, this);
 }
