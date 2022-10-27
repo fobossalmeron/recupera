@@ -7422,11 +7422,43 @@ var _ctaDefault = parcelHelpers.interopDefault(_cta);
 var _delayForLoading = require("../utils/delayForLoading");
 var _delayForLoadingDefault = parcelHelpers.interopDefault(_delayForLoading);
 var _s = $RefreshSig$();
-function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
+const Tabla = [
+    {
+        limiteInferior: 0.01,
+        limiteSuperior: 7735.0,
+        cuotaFija: 0,
+        porcentaje: 1.92
+    },
+    {
+        limiteInferior: 7735.01,
+        limiteSuperior: 65651.07,
+        cuotaFija: 148.51,
+        porcentaje: 6.4
+    },
+    {
+        limiteInferior: 65651.08,
+        limiteSuperior: 115375.9,
+        cuotaFija: 3855.14,
+        porcentaje: 10.88
+    },
+    {
+        limiteInferior: 115375.91,
+        limiteSuperior: 134119.41,
+        cuotaFija: 9265.2,
+        porcentaje: 16.0
+    },
+    {
+        limiteInferior: 3898140.13,
+        limiteSuperior: 10000000,
+        cuotaFija: 1222522.76,
+        porcentaje: 35.0
+    }
+];
+function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
     _s();
     const [sueldo, setSueldo] = (0, _react.useState)(0);
     const [saldoAFavor, setSaldoAFavor] = (0, _react.useState)(0);
-    const { register , formState: { errors , isDirty , isValid , isSubmitSuccessful , control  } , handleSubmit  } = (0, _reactHookForm.useForm)({
+    const { register , formState: { errors , isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)({
         mode: "onChange"
     });
     const onSubmit = (data)=>{
@@ -7434,24 +7466,26 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
         (0, _delayForLoadingDefault.default)(300).then(()=>setSueldo(+data.sueldo));
         (0, _delayForLoadingDefault.default)(500).then(()=>setAreWeDone(true));
     };
+    const getChosenRow = (baseGrav)=>{
+        let row = Tabla.find((row)=>baseGrav < row.limiteSuperior);
+        return row;
+    };
     (0, _react.useEffect)(()=>{
-        console.log(errors);
-    }, [
-        errors
-    ]);
-    (0, _react.useEffect)(()=>{
-        // if (sueldo === 0) {
-        //   return;
-        // }
-        console.log("el sueldo es " + sueldo);
+        if (sueldo === 0) return;
         let ingresosGravables = sueldo * 12;
         let deduccionesPersonales = ingresosGravables * 0.15;
         let baseGravable = ingresosGravables - deduccionesPersonales;
-        console.log("sueldo mensual bruto $" + sueldo.toLocaleString());
-        console.log("Ingresos gravables $" + ingresosGravables.toLocaleString());
-        console.log("Deducciones personales $" + deduccionesPersonales.toLocaleString());
-        console.log("Base gravable $" + baseGravable.toLocaleString());
-        setSaldoAFavor(baseGravable.toLocaleString("es-MX", {
+        let chosenRow = getChosenRow(baseGravable);
+        let limiteInferior = chosenRow.limiteInferior;
+        let excedente = baseGravable - limiteInferior;
+        let porcentaje = chosenRow.porcentaje;
+        let impuestoMarginal = excedente / 100 * porcentaje;
+        let cuotaFija = chosenRow.cuotaFija;
+        let ISRaCargo = impuestoMarginal + cuotaFija;
+        let ISRretenido = 10305.2015; //Cómo se puede sacar el ISR Retenido? Hay que duplicar el mecanismo?
+        let ISRdelEjercicio = ISRaCargo - ISRretenido;
+        console.log("\n\n\nSalario mensual bruto $" + sueldo.toLocaleString() + "\n\n" + "Ingresos gravables $" + ingresosGravables.toLocaleString() + "\n" + "Deducciones personales $" + deduccionesPersonales.toLocaleString() + "\n" + "Base gravable $" + baseGravable.toLocaleString() + "\n" + "L\xedmite inferior $" + limiteInferior.toLocaleString() + "\n" + "Excedente $" + excedente.toLocaleString() + "\n" + "Porcentaje " + porcentaje.toLocaleString() + "%" + "\n" + "Impuesto marginal $" + impuestoMarginal.toLocaleString() + "\n" + "cuotaFija $" + cuotaFija.toLocaleString() + "\n" + "ISR a cargo $" + ISRaCargo.toLocaleString() + "\n" + "ISR retenido $" + ISRretenido.toLocaleString() + "\n" + "ISR del ejercicio $" + ISRdelEjercicio.toLocaleString());
+        setSaldoAFavor((ISRdelEjercicio * -1).toLocaleString("es-MX", {
             maximumFractionDigits: 0
         }));
     }, [
@@ -7466,20 +7500,20 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                         children: "Saldo a favor"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 55,
+                        lineNumber: 84,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(SaldoNumber, {
                         children: areWeDone ? "$" + saldoAFavor : "$00,000"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 56,
+                        lineNumber: 85,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 54,
+                lineNumber: 83,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -7492,7 +7526,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 children: areWeDone ? "Recuperable del SAT con un sueldo mensual de " : "Sueldo mensual"
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 60,
+                                lineNumber: 89,
                                 columnNumber: 11
                             }, this),
                             areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NonEditable, {
@@ -7504,7 +7538,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 63,
+                                lineNumber: 92,
                                 columnNumber: 25
                             }, this),
                             !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
@@ -7514,20 +7548,20 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                                 type: "number",
                                 pattern: "[0-9]*",
                                 min: "5000",
-                                max: "1000000",
+                                max: "4000000",
                                 placeholder: "Ingresa tu sueldo mensual",
                                 ...register("sueldo", {
                                     required: true
                                 })
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 68,
+                                lineNumber: 97,
                                 columnNumber: 26
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 59,
+                        lineNumber: 88,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7536,7 +7570,7 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                         show: !areWeDone
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 72,
+                        lineNumber: 101,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7547,29 +7581,29 @@ function MainForm({ switchForm , show , areWeDone , setAreWeDone  }) {
                             "\xdanete el beta ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Arrow, {}, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 74,
+                                lineNumber: 103,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 73,
+                        lineNumber: 102,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 58,
+                lineNumber: 87,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/MainForm.js",
-        lineNumber: 53,
+        lineNumber: 82,
         columnNumber: 10
     }, this);
 }
-_s(MainForm, "/QwjJsY6lPY+E2LRod3m7XKZtFw=", false, function() {
+_s(MainForm, "xtuPCeW5sLrN5pBmpZIKUvcibPg=", false, function() {
     return [
         (0, _reactHookForm.useForm)
     ];
