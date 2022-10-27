@@ -18,7 +18,9 @@ font-family: inherit;
   -webkit-tap-highlight-color: transparent;
   &::placeholder {
     font-style: normal;
+    transition:0.2s all;
   }
+  text-align:center;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -28,12 +30,16 @@ font-family: inherit;
   width: 100%px;
   background: #ffffff;
   border: 2px solid;
-  border-color: ${(p) => (p.error ? "#E7414C" : "#838994")};
-  outline: none;
+  transition: 0.2s ease;
+  border-color: ${(p) => (p.hasOwnError ? "#E7414C" : "#838994")};
+  outline:none;
   &:focus,
   &:active {
-    border-color: ${(p) => (p.error ? "#E7414C" : "#7368f8")};
-    outline-color: ${(p) => (p.error ? "#E7414C" : "#7368f8")};
+    border-color: ${(p) => (p.hasOwnError  ? "#E7414C" : "#7368f8")};
+    outline-color: ${(p) => (p.hasOwnError  ? "#E7414C" : "#7368f8")};
+    &::placeholder{
+      opacity:0;
+    }
   }
   flex: none;
   order: 0;

@@ -13,7 +13,7 @@ function PopupForm({ switchForm, show }) {
     register,
     formState: { errors, isDirty, isValid },
     handleSubmit,
-  } = useForm();
+  } = useForm({ mode: "onBlur" });
 
   const onSubmit = (data) => {
     console.log(data);
@@ -32,7 +32,7 @@ function PopupForm({ switchForm, show }) {
           <label htmlFor={`cp_email`}>Tu email</label>
           <Field
             name="email"
-            error={isDirty && !isValid}
+            hasOwnError={isDirty && !isValid}
             id={`cp_email`}
             type="email"
             placeholder={"Ingresa tu email"}
@@ -44,7 +44,6 @@ function PopupForm({ switchForm, show }) {
                 message: "Email inválido",
               },
             })}
-            aria-invalid={errors.email ? "true" : "false"}
           />
         </OuterField>
         {errors?.email?.type === "pattern" && (

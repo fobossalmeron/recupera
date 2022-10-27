@@ -3,6 +3,7 @@
   "version": "yes",
   "repository": "https://github.com/fobossalmeron/recupera.git",
   "author": "Rodrigo Salmeron <fobos.salmeron@gmail.com>",
+  "main" : "src/index.js",
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -15,6 +16,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.38.0",
+    "react-input-mask": "^2.0.4",
     "react-number-format": "^5.1.0",
     "styled-components": "^5.3.6"
   },

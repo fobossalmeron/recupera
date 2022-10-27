@@ -46,6 +46,7 @@ const Wrapper = styled.div`
     }
     input::placeholder {
       font-weight: inherit;
+      text-align:center;
     }
   }
   * {
