@@ -5,7 +5,6 @@ import Wrapper from "./shared/Wrapper";
 import { Field, OuterField } from "./shared/Field";
 import CTA from "./shared/CTA";
 import delayForLoading from "../utils/delayForLoading";
-import MaskedInput from "react-input-mask";
 
 const Tabla = [
   {
@@ -81,7 +80,7 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
   const [saldoAFavor, setSaldoAFavor] = useState(0);
   const {
     register,
-    formState: {  isDirty, isValid },
+    formState: { isDirty, isValid },
     handleSubmit,
   } = useForm({ mode: "onChange" });
 
@@ -90,7 +89,6 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
     delayForLoading(300).then(() => setSueldo(+data.sueldo));
     delayForLoading(500).then(() => setAreWeDone(true));
   };
-
 
   const getChosenRow = (baseGrav) => {
     let row = 0;
@@ -212,8 +210,12 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
     );
   }, [sueldo]);
 
+  const focusOnEnter = () => {
+    document.getElementsByName("sueldo")[0].focus();
+  };
+
   return (
-    <Wrapper show>
+    <Wrapper show onMouseEnter={focusOnEnter}>
       <div>
         <Tag>Saldo a favor</Tag>
         <SaldoNumber>{areWeDone ? "$" + saldoAFavor : "$00,000"}</SaldoNumber>
