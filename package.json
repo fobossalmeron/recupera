@@ -3,7 +3,7 @@
   "version": "yes",
   "repository": "https://github.com/fobossalmeron/recupera.git",
   "author": "Rodrigo Salmeron <fobos.salmeron@gmail.com>",
-  "main" : "src/index.js",
+  "dev": "src/index.js",
   "license": "MIT",
   "private": false,
   "scripts": {

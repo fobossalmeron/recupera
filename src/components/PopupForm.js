@@ -5,6 +5,7 @@ import Wrapper from "./shared/Wrapper";
 import { Field, OuterField } from "./shared/Field";
 import ErrorMessage from "./shared/ErrorMessage";
 import CTA from "./shared/CTA";
+import delayForLoading from "../utils/delayForLoading";
 
 function PopupForm({ switchForm, show }) {
   const [salario, setSalario] = useState(0);
@@ -22,6 +23,13 @@ function PopupForm({ switchForm, show }) {
 
   useEffect(() => {}, [salario]);
 
+  useEffect(() => {
+    show &&
+      delayForLoading(500).then(() =>
+        document.getElementsByName("email")[0].focus()
+      );
+  }, [show]);
+
   return (
     <WrapperPopup show={show}>
       <Copy>
@@ -29,13 +37,13 @@ function PopupForm({ switchForm, show }) {
       </Copy>
       <form onSubmit={handleSubmit(onSubmit)}>
         <OuterField>
-          <label htmlFor={`cp_email`}>Tu email</label>
+          <label htmlFor={`cp_email`}>Ingresa tu email</label>
           <Field
             name="email"
             hasOwnError={isDirty && !isValid}
             id={`cp_email`}
             type="email"
-            placeholder={"Ingresa tu email"}
+            placeholder={"Tu email"}
             {...register("email", {
               required: true,
               pattern: {
@@ -50,7 +58,7 @@ function PopupForm({ switchForm, show }) {
           <ErrorMessage>Necesitamos un correo real 😔</ErrorMessage>
         )}
 
-        <CTA type="submit" value="Ver resultado" show/>
+        <CTA type="submit" value="Ver resultado" show />
       </form>
     </WrapperPopup>
   );

@@ -5,6 +5,7 @@ import Wrapper from "./shared/Wrapper";
 import { Field, OuterField } from "./shared/Field";
 import CTA from "./shared/CTA";
 import delayForLoading from "../utils/delayForLoading";
+import MaskedInput from "react-input-mask";
 
 const Tabla = [
   {
@@ -32,6 +33,42 @@ const Tabla = [
     porcentaje: 16.0,
   },
   {
+    limiteInferior: 134119.42,
+    limiteSuperior: 160577.65,
+    cuotaFija: 12264.16,
+    porcentaje: 17.92,
+  },
+  {
+    limiteInferior: 160577.66,
+    limiteSuperior: 323862.0,
+    cuotaFija: 17005.47,
+    porcentaje: 21.36,
+  },
+  {
+    limiteInferior: 323862.01,
+    limiteSuperior: 510451.0,
+    cuotaFija: 51883.01,
+    porcentaje: 23.52,
+  },
+  {
+    limiteInferior: 510451.01,
+    limiteSuperior: 974535.03,
+    cuotaFija: 95768.74,
+    porcentaje: 30.0,
+  },
+  {
+    limiteInferior: 974535.04,
+    limiteSuperior: 1299380.04,
+    cuotaFija: 234993.95,
+    porcentaje: 32.0,
+  },
+  {
+    limiteInferior: 1299380.05,
+    limiteSuperior: 3898140.12,
+    cuotaFija: 338944.34,
+    porcentaje: 34.0,
+  },
+  {
     limiteInferior: 3898140.13,
     limiteSuperior: 10000000,
     cuotaFija: 1222522.76,
@@ -44,7 +81,7 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
   const [saldoAFavor, setSaldoAFavor] = useState(0);
   const {
     register,
-    formState: { errors, isDirty, isValid },
+    formState: {  isDirty, isValid },
     handleSubmit,
   } = useForm({ mode: "onChange" });
 
@@ -54,8 +91,16 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
     delayForLoading(500).then(() => setAreWeDone(true));
   };
 
+
   const getChosenRow = (baseGrav) => {
-    let row = Tabla.find((row) => baseGrav < row.limiteSuperior);
+    let row = 0;
+    if (baseGrav > Tabla.at(-1).limiteSuperior - 0.001) {
+      // Si la base gravable es más grande que la última fila, usamos la última fila
+      row = Tabla.at(-1);
+    } else {
+      // Si no, asignamos la fila correspondiente
+      row = Tabla.find((row) => baseGrav < row.limiteSuperior);
+    }
     return row;
   };
 
@@ -64,7 +109,24 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
       return;
     }
 
-    let ingresosGravables = sueldo * 12;
+    // ISR sin deducciones
+    let r_ingresosGravables = sueldo * 12;
+    let r_deduccionesPersonales = 0;
+    let r_baseGravable = r_ingresosGravables - r_deduccionesPersonales;
+
+    let r_rango = getChosenRow(r_baseGravable);
+
+    let r_limiteInferior = r_rango.limiteInferior;
+    let r_excedente = r_baseGravable - r_limiteInferior;
+    let r_porcentaje = r_rango.porcentaje;
+    let r_impuestoMarginal = (r_excedente / 100) * r_porcentaje;
+    let r_cuotaFija = r_rango.cuotaFija;
+    let r_ISRaCargo = r_impuestoMarginal + r_cuotaFija;
+    let r_ISRretenido = r_ISRaCargo * 1.03;
+    let r_ISRdelEjercicio = r_ISRaCargo - r_ISRretenido;
+
+    // ISR con deducciones
+    let ingresosGravables = r_ingresosGravables;
     let deduccionesPersonales = ingresosGravables * 0.15;
     let baseGravable = ingresosGravables - deduccionesPersonales;
 
@@ -76,7 +138,7 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
     let impuestoMarginal = (excedente / 100) * porcentaje;
     let cuotaFija = chosenRow.cuotaFija;
     let ISRaCargo = impuestoMarginal + cuotaFija;
-    let ISRretenido = 10005.05 * 1.03; //Cómo se puede sacar el ISR Retenido? Hay que duplicar el mecanismo?
+    let ISRretenido = r_ISRaCargo * 1.03;
     let ISRdelEjercicio = ISRaCargo - ISRretenido;
 
     console.log(
@@ -85,38 +147,62 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
         "Salario mensual bruto $" +
         sueldo.toLocaleString() +
         "\n\n" +
-        "Ingresos gravables $" +
+        "Rubro                  Sin deducciones     Con deducciones" +
+        "\n\n" +
+        "Ingresos gravables     $" +
+        ingresosGravables.toLocaleString() +
+        "            $" +
         ingresosGravables.toLocaleString() +
         "\n" +
         "Deducciones personales $" +
+        r_deduccionesPersonales.toLocaleString() +
+        "                  $" +
         deduccionesPersonales.toLocaleString() +
         "\n" +
-        "Base gravable $" +
+        "Base gravable          $" +
+        r_baseGravable.toLocaleString() +
+        "            $" +
         baseGravable.toLocaleString() +
         "\n" +
-        "Límite inferior $" +
+        "Límite inferior        $" +
+        r_limiteInferior.toLocaleString() +
+        "         $" +
         limiteInferior.toLocaleString() +
         "\n" +
-        "Excedente $" +
+        "Excedente              $" +
+        r_excedente.toLocaleString() +
+        "           $" +
         excedente.toLocaleString() +
         "\n" +
-        "Porcentaje " +
+        "Porcentaje             " +
+        r_porcentaje.toLocaleString() +
+        "%                 " +
         porcentaje.toLocaleString() +
         "%" +
         "\n" +
-        "Impuesto marginal $" +
+        "Impuesto marginal      $" +
+        r_impuestoMarginal.toLocaleString() +
+        "            $" +
         impuestoMarginal.toLocaleString() +
         "\n" +
-        "cuotaFija $" +
+        "cuotaFija              $" +
+        r_cuotaFija.toLocaleString() +
+        "            $" +
         cuotaFija.toLocaleString() +
         "\n" +
-        "ISR a cargo $" +
+        "ISR a cargo            $" +
+        r_ISRaCargo.toLocaleString() +
+        "         $" +
         ISRaCargo.toLocaleString() +
         "\n" +
-        "ISR retenido $" +
+        "ISR retenido           $" +
+        r_ISRretenido.toLocaleString() +
+        "         $" +
         ISRretenido.toLocaleString() +
         "\n" +
-        "ISR del ejercicio $" +
+        "ISR del ejercicio      $" +
+        r_ISRdelEjercicio.toLocaleString() +
+        "           $" +
         ISRdelEjercicio.toLocaleString()
     );
     setSaldoAFavor(
@@ -137,7 +223,7 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
           <label htmlFor={`cp_sueldo`}>
             {areWeDone
               ? "Recuperable del SAT con un sueldo mensual de "
-              : "Sueldo mensual"}
+              : "Ingresa tu sueldo mensual"}
           </label>
           {areWeDone && (
             <NonEditable>
@@ -151,9 +237,7 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
               id={`cp_sueldo`}
               type="number"
               pattern="[0-9]*"
-              min="5000"
-              max="4000000"
-              placeholder={"Ingresa tu sueldo mensual"}
+              placeholder={"Sueldo mensual"}
               {...register("sueldo", {
                 required: true,
               })}
