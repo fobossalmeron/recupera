@@ -6578,7 +6578,8 @@ exports.default = He;
 module.exports = require("./cjs/react-is.development.js");
 
 },{"./cjs/react-is.development.js":"5DsXl"}],"5DsXl":[function(require,module,exports) {
-/** @license React v16.13.1
+/**
+ * @license React
  * react-is.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -6588,30 +6589,45 @@ module.exports = require("./cjs/react-is.development.js");
  */ "use strict";
 (function() {
     "use strict";
-    // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
-    // nor polyfill, then a plain number is used for performance.
-    var hasSymbol = typeof Symbol === "function" && Symbol.for;
-    var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for("react.element") : 0xeac7;
-    var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for("react.portal") : 0xeaca;
-    var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for("react.fragment") : 0xeacb;
-    var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for("react.strict_mode") : 0xeacc;
-    var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for("react.profiler") : 0xead2;
-    var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for("react.provider") : 0xeacd;
-    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for("react.context") : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
-    // (unstable) APIs that have been removed. Can we remove the symbols?
-    var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for("react.async_mode") : 0xeacf;
-    var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for("react.concurrent_mode") : 0xeacf;
-    var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for("react.forward_ref") : 0xead0;
-    var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for("react.suspense") : 0xead1;
-    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for("react.suspense_list") : 0xead8;
-    var REACT_MEMO_TYPE = hasSymbol ? Symbol.for("react.memo") : 0xead3;
-    var REACT_LAZY_TYPE = hasSymbol ? Symbol.for("react.lazy") : 0xead4;
-    var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for("react.block") : 0xead9;
-    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for("react.fundamental") : 0xead5;
-    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for("react.responder") : 0xead6;
-    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for("react.scope") : 0xead7;
+    // ATTENTION
+    // When adding new symbols to this file,
+    // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
+    // The Symbol used to tag the ReactElement-like types.
+    var REACT_ELEMENT_TYPE = Symbol.for("react.element");
+    var REACT_PORTAL_TYPE = Symbol.for("react.portal");
+    var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
+    var REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode");
+    var REACT_PROFILER_TYPE = Symbol.for("react.profiler");
+    var REACT_PROVIDER_TYPE = Symbol.for("react.provider");
+    var REACT_CONTEXT_TYPE = Symbol.for("react.context");
+    var REACT_SERVER_CONTEXT_TYPE = Symbol.for("react.server_context");
+    var REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref");
+    var REACT_SUSPENSE_TYPE = Symbol.for("react.suspense");
+    var REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list");
+    var REACT_MEMO_TYPE = Symbol.for("react.memo");
+    var REACT_LAZY_TYPE = Symbol.for("react.lazy");
+    var REACT_OFFSCREEN_TYPE = Symbol.for("react.offscreen");
+    // -----------------------------------------------------------------------------
+    var enableScopeAPI = false; // Experimental Create Event Handle API.
+    var enableCacheElement = false;
+    var enableTransitionTracing = false; // No known bugs, but needs performance testing
+    var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
+    // stuff. Intended to enable React core members to more easily debug scheduling
+    // issues in DEV builds.
+    var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
+    var REACT_MODULE_REFERENCE;
+    REACT_MODULE_REFERENCE = Symbol.for("react.module.reference");
     function isValidElementType(type) {
-        return typeof type === "string" || typeof type === "function" || type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === "object" && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+        if (typeof type === "string" || typeof type === "function") return true;
+         // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+        if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing) return true;
+        if (typeof type === "object" && type !== null) {
+            if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || // types supported by any Flight configuration anywhere since
+            // we don't know which Flight build this will end up being used
+            // with.
+            type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== undefined) return true;
+        }
+        return false;
     }
     function typeOf(object) {
         if (typeof object === "object" && object !== null) {
@@ -6620,16 +6636,16 @@ module.exports = require("./cjs/react-is.development.js");
                 case REACT_ELEMENT_TYPE:
                     var type = object.type;
                     switch(type){
-                        case REACT_ASYNC_MODE_TYPE:
-                        case REACT_CONCURRENT_MODE_TYPE:
                         case REACT_FRAGMENT_TYPE:
                         case REACT_PROFILER_TYPE:
                         case REACT_STRICT_MODE_TYPE:
                         case REACT_SUSPENSE_TYPE:
+                        case REACT_SUSPENSE_LIST_TYPE:
                             return type;
                         default:
                             var $$typeofType = type && type.$$typeof;
                             switch($$typeofType){
+                                case REACT_SERVER_CONTEXT_TYPE:
                                 case REACT_CONTEXT_TYPE:
                                 case REACT_FORWARD_REF_TYPE:
                                 case REACT_LAZY_TYPE:
@@ -6645,9 +6661,7 @@ module.exports = require("./cjs/react-is.development.js");
             }
         }
         return undefined;
-    } // AsyncMode is deprecated along with isAsyncMode
-    var AsyncMode = REACT_ASYNC_MODE_TYPE;
-    var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+    }
     var ContextConsumer = REACT_CONTEXT_TYPE;
     var ContextProvider = REACT_PROVIDER_TYPE;
     var Element = REACT_ELEMENT_TYPE;
@@ -6659,16 +6673,22 @@ module.exports = require("./cjs/react-is.development.js");
     var Profiler = REACT_PROFILER_TYPE;
     var StrictMode = REACT_STRICT_MODE_TYPE;
     var Suspense = REACT_SUSPENSE_TYPE;
-    var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+    var SuspenseList = REACT_SUSPENSE_LIST_TYPE;
+    var hasWarnedAboutDeprecatedIsAsyncMode = false;
+    var hasWarnedAboutDeprecatedIsConcurrentMode = false; // AsyncMode should be deprecated
     function isAsyncMode(object) {
         if (!hasWarnedAboutDeprecatedIsAsyncMode) {
             hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
-            console["warn"]("The ReactIs.isAsyncMode() alias has been deprecated, and will be removed in React 17+. Update your code to use ReactIs.isConcurrentMode() instead. It has the exact same API.");
+            console["warn"]("The ReactIs.isAsyncMode() alias has been deprecated, and will be removed in React 18+.");
         }
-        return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+        return false;
     }
     function isConcurrentMode(object) {
-        return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+        if (!hasWarnedAboutDeprecatedIsConcurrentMode) {
+            hasWarnedAboutDeprecatedIsConcurrentMode = true; // Using console['warn'] to evade Babel and ESLint
+            console["warn"]("The ReactIs.isConcurrentMode() alias has been deprecated, and will be removed in React 18+.");
+        }
+        return false;
     }
     function isContextConsumer(object) {
         return typeOf(object) === REACT_CONTEXT_TYPE;
@@ -6703,8 +6723,9 @@ module.exports = require("./cjs/react-is.development.js");
     function isSuspense(object) {
         return typeOf(object) === REACT_SUSPENSE_TYPE;
     }
-    exports.AsyncMode = AsyncMode;
-    exports.ConcurrentMode = ConcurrentMode;
+    function isSuspenseList(object) {
+        return typeOf(object) === REACT_SUSPENSE_LIST_TYPE;
+    }
     exports.ContextConsumer = ContextConsumer;
     exports.ContextProvider = ContextProvider;
     exports.Element = Element;
@@ -6716,6 +6737,7 @@ module.exports = require("./cjs/react-is.development.js");
     exports.Profiler = Profiler;
     exports.StrictMode = StrictMode;
     exports.Suspense = Suspense;
+    exports.SuspenseList = SuspenseList;
     exports.isAsyncMode = isAsyncMode;
     exports.isConcurrentMode = isConcurrentMode;
     exports.isContextConsumer = isContextConsumer;
@@ -6729,6 +6751,7 @@ module.exports = require("./cjs/react-is.development.js");
     exports.isProfiler = isProfiler;
     exports.isStrictMode = isStrictMode;
     exports.isSuspense = isSuspense;
+    exports.isSuspenseList = isSuspenseList;
     exports.isValidElementType = isValidElementType;
     exports.typeOf = typeOf;
 })();
@@ -7400,7 +7423,167 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 }
 module.exports = hoistNonReactStatics;
 
-},{"react-is":"7EuwB"}],"2thnF":[function(require,module,exports) {
+},{"react-is":"8V70c"}],"8V70c":[function(require,module,exports) {
+"use strict";
+module.exports = require("./cjs/react-is.development.js");
+
+},{"./cjs/react-is.development.js":"drjfK"}],"drjfK":[function(require,module,exports) {
+/** @license React v16.13.1
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */ "use strict";
+(function() {
+    "use strict";
+    // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+    // nor polyfill, then a plain number is used for performance.
+    var hasSymbol = typeof Symbol === "function" && Symbol.for;
+    var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for("react.element") : 0xeac7;
+    var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for("react.portal") : 0xeaca;
+    var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for("react.fragment") : 0xeacb;
+    var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for("react.strict_mode") : 0xeacc;
+    var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for("react.profiler") : 0xead2;
+    var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for("react.provider") : 0xeacd;
+    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for("react.context") : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+    // (unstable) APIs that have been removed. Can we remove the symbols?
+    var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for("react.async_mode") : 0xeacf;
+    var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for("react.concurrent_mode") : 0xeacf;
+    var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for("react.forward_ref") : 0xead0;
+    var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for("react.suspense") : 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for("react.suspense_list") : 0xead8;
+    var REACT_MEMO_TYPE = hasSymbol ? Symbol.for("react.memo") : 0xead3;
+    var REACT_LAZY_TYPE = hasSymbol ? Symbol.for("react.lazy") : 0xead4;
+    var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for("react.block") : 0xead9;
+    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for("react.fundamental") : 0xead5;
+    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for("react.responder") : 0xead6;
+    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for("react.scope") : 0xead7;
+    function isValidElementType(type) {
+        return typeof type === "string" || typeof type === "function" || type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === "object" && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+    }
+    function typeOf(object) {
+        if (typeof object === "object" && object !== null) {
+            var $$typeof = object.$$typeof;
+            switch($$typeof){
+                case REACT_ELEMENT_TYPE:
+                    var type = object.type;
+                    switch(type){
+                        case REACT_ASYNC_MODE_TYPE:
+                        case REACT_CONCURRENT_MODE_TYPE:
+                        case REACT_FRAGMENT_TYPE:
+                        case REACT_PROFILER_TYPE:
+                        case REACT_STRICT_MODE_TYPE:
+                        case REACT_SUSPENSE_TYPE:
+                            return type;
+                        default:
+                            var $$typeofType = type && type.$$typeof;
+                            switch($$typeofType){
+                                case REACT_CONTEXT_TYPE:
+                                case REACT_FORWARD_REF_TYPE:
+                                case REACT_LAZY_TYPE:
+                                case REACT_MEMO_TYPE:
+                                case REACT_PROVIDER_TYPE:
+                                    return $$typeofType;
+                                default:
+                                    return $$typeof;
+                            }
+                    }
+                case REACT_PORTAL_TYPE:
+                    return $$typeof;
+            }
+        }
+        return undefined;
+    } // AsyncMode is deprecated along with isAsyncMode
+    var AsyncMode = REACT_ASYNC_MODE_TYPE;
+    var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+    var ContextConsumer = REACT_CONTEXT_TYPE;
+    var ContextProvider = REACT_PROVIDER_TYPE;
+    var Element = REACT_ELEMENT_TYPE;
+    var ForwardRef = REACT_FORWARD_REF_TYPE;
+    var Fragment = REACT_FRAGMENT_TYPE;
+    var Lazy = REACT_LAZY_TYPE;
+    var Memo = REACT_MEMO_TYPE;
+    var Portal = REACT_PORTAL_TYPE;
+    var Profiler = REACT_PROFILER_TYPE;
+    var StrictMode = REACT_STRICT_MODE_TYPE;
+    var Suspense = REACT_SUSPENSE_TYPE;
+    var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+    function isAsyncMode(object) {
+        if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+            hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+            console["warn"]("The ReactIs.isAsyncMode() alias has been deprecated, and will be removed in React 17+. Update your code to use ReactIs.isConcurrentMode() instead. It has the exact same API.");
+        }
+        return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+    }
+    function isConcurrentMode(object) {
+        return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+    }
+    function isContextConsumer(object) {
+        return typeOf(object) === REACT_CONTEXT_TYPE;
+    }
+    function isContextProvider(object) {
+        return typeOf(object) === REACT_PROVIDER_TYPE;
+    }
+    function isElement(object) {
+        return typeof object === "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+    }
+    function isForwardRef(object) {
+        return typeOf(object) === REACT_FORWARD_REF_TYPE;
+    }
+    function isFragment(object) {
+        return typeOf(object) === REACT_FRAGMENT_TYPE;
+    }
+    function isLazy(object) {
+        return typeOf(object) === REACT_LAZY_TYPE;
+    }
+    function isMemo(object) {
+        return typeOf(object) === REACT_MEMO_TYPE;
+    }
+    function isPortal(object) {
+        return typeOf(object) === REACT_PORTAL_TYPE;
+    }
+    function isProfiler(object) {
+        return typeOf(object) === REACT_PROFILER_TYPE;
+    }
+    function isStrictMode(object) {
+        return typeOf(object) === REACT_STRICT_MODE_TYPE;
+    }
+    function isSuspense(object) {
+        return typeOf(object) === REACT_SUSPENSE_TYPE;
+    }
+    exports.AsyncMode = AsyncMode;
+    exports.ConcurrentMode = ConcurrentMode;
+    exports.ContextConsumer = ContextConsumer;
+    exports.ContextProvider = ContextProvider;
+    exports.Element = Element;
+    exports.ForwardRef = ForwardRef;
+    exports.Fragment = Fragment;
+    exports.Lazy = Lazy;
+    exports.Memo = Memo;
+    exports.Portal = Portal;
+    exports.Profiler = Profiler;
+    exports.StrictMode = StrictMode;
+    exports.Suspense = Suspense;
+    exports.isAsyncMode = isAsyncMode;
+    exports.isConcurrentMode = isConcurrentMode;
+    exports.isContextConsumer = isContextConsumer;
+    exports.isContextProvider = isContextProvider;
+    exports.isElement = isElement;
+    exports.isForwardRef = isForwardRef;
+    exports.isFragment = isFragment;
+    exports.isLazy = isLazy;
+    exports.isMemo = isMemo;
+    exports.isPortal = isPortal;
+    exports.isProfiler = isProfiler;
+    exports.isStrictMode = isStrictMode;
+    exports.isSuspense = isSuspense;
+    exports.isValidElementType = isValidElementType;
+    exports.typeOf = typeOf;
+})();
+
+},{}],"2thnF":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$a69c = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -7421,6 +7604,8 @@ var _cta = require("./shared/CTA");
 var _ctaDefault = parcelHelpers.interopDefault(_cta);
 var _delayForLoading = require("../utils/delayForLoading");
 var _delayForLoadingDefault = parcelHelpers.interopDefault(_delayForLoading);
+var _inputCurrencyReact = require("input-currency-react");
+var _fieldCss = require("./Field.css");
 var _s = $RefreshSig$();
 const Tabla = [
     {
@@ -7494,12 +7679,12 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
     _s();
     const [sueldo, setSueldo] = (0, _react.useState)(0);
     const [saldoAFavor, setSaldoAFavor] = (0, _react.useState)(0);
-    const { register , formState: { isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)({
+    const { control , register , formState: { isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)({
         mode: "onChange"
     });
     const onSubmit = (data)=>{
         switchForm(true);
-        (0, _delayForLoadingDefault.default)(300).then(()=>setSueldo(+data.sueldo));
+        // delayForLoading(300).then(() => setSueldo(+data.sueldo));
         (0, _delayForLoadingDefault.default)(500).then(()=>setAreWeDone(true));
     };
     const getChosenRow = (baseGrav)=>{
@@ -7545,12 +7730,12 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
     }, [
         sueldo
     ]);
-    const focusOnEnter = ()=>{
-        document.getElementsByName("sueldo")[0].focus();
+    const handleOnChange = (inputElement, maskedValue, value)=>{
+        setSueldo(+value);
+        console.log(maskedValue, value);
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _wrapperDefault.default), {
         show: true,
-        onMouseEnter: focusOnEnter,
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 children: [
@@ -7558,20 +7743,20 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                         children: "Saldo a favor"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 139,
+                        lineNumber: 143,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(SaldoNumber, {
                         children: areWeDone ? "$" + saldoAFavor : "$00,000"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 140,
+                        lineNumber: 144,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 138,
+                lineNumber: 142,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -7584,7 +7769,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 children: areWeDone ? "Recuperable del SAT con un sueldo mensual de " : "Ingresa tu sueldo mensual"
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 144,
+                                lineNumber: 148,
                                 columnNumber: 11
                             }, this),
                             areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NonEditable, {
@@ -7596,28 +7781,30 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 147,
+                                lineNumber: 151,
                                 columnNumber: 25
                             }, this),
-                            !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
-                                name: "sueldo",
-                                hasOwnError: isDirty && !isValid,
-                                id: `cp_sueldo`,
-                                type: "number",
-                                pattern: "[0-9]*",
-                                placeholder: "Sueldo mensual",
-                                ...register("sueldo", {
-                                    required: true
-                                })
+                            !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _inputCurrencyReact.CurrencyInput), {
+                                style: {
+                                    width: 300
+                                },
+                                options: {
+                                    precision: 3,
+                                    style: "decimal",
+                                    locale: "es-MX",
+                                    i18nCurrency: "MXN"
+                                },
+                                autoFocus: true,
+                                onChangeEvent: handleOnChange
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 152,
+                                lineNumber: 156,
                                 columnNumber: 26
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 143,
+                        lineNumber: 147,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7626,7 +7813,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                         show: !areWeDone
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 156,
+                        lineNumber: 178,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7637,29 +7824,29 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                             "\xdanete el beta ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Arrow, {}, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 158,
+                                lineNumber: 180,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 157,
+                        lineNumber: 179,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 142,
+                lineNumber: 146,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/MainForm.js",
-        lineNumber: 137,
+        lineNumber: 141,
         columnNumber: 10
     }, this);
 }
-_s(MainForm, "fRI94H3LS8QcIZywRUiaZBxdMp4=", false, function() {
+_s(MainForm, "b+DCTR9/4THjrzIdlvgF2vC+q64=", false, function() {
     return [
         (0, _reactHookForm.useForm)
     ];
@@ -7677,14 +7864,14 @@ const Arrow = (0, _styledComponentsDefault.default).span.withConfig({
     displayName: "MainForm__Arrow",
     componentId: "sc-5opgl9-1"
 })([
-    'background-color:white;height:2px;width:20px;display:inline-block;position:relative;border-radius:3px;&:before,&:after{content:" ";background-color:white;height:2px;width:10px;display:inline-block;position:absolute;right:-1px;border-radius:3px;}&:before{top:-3px;transform:rotate(40deg);}&:after{top:3px;transform:rotate(-40deg);}'
+    "background-color:white;height:2px;width:20px;display:inline-block;position:relative;border-radius:3px;&:before,&:after{content:' ';background-color:white;height:2px;width:10px;display:inline-block;position:absolute;right:-1px;border-radius:3px;}&:before{top:-3px;transform:rotate(40deg);}&:after{top:3px;transform:rotate(-40deg);}"
 ]);
 _c2 = Arrow;
 const Dollar = (0, _styledComponentsDefault.default).span.withConfig({
     displayName: "MainForm__Dollar",
     componentId: "sc-5opgl9-2"
 })([
-    'content:"$";color:black;position:absolute;display:block;'
+    "content:'$';color:black;position:absolute;display:block;"
 ]);
 const Tag = (0, _styledComponentsDefault.default).div.withConfig({
     displayName: "MainForm__Tag",
@@ -7712,7 +7899,7 @@ $RefreshReg$(_c4, "SaldoNumber");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-hook-form":"kRky9","styled-components":"1U3k6","./shared/Wrapper":"4Zapv","./shared/Field":"eow5S","./shared/CTA":"kttpQ","../utils/delayForLoading":"ZwmQc","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"kRky9":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-hook-form":"kRky9","styled-components":"1U3k6","./shared/Wrapper":"4Zapv","./shared/Field":"eow5S","./shared/CTA":"kttpQ","../utils/delayForLoading":"ZwmQc","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","input-currency-react":"eGE3a","./Field.css":"1pE1D"}],"kRky9":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Controller", ()=>Controller);
@@ -9834,7 +10021,593 @@ function registerExportsForReactRefresh(module1) {
     }
 }
 
-},{"react-refresh/runtime":"786KC"}],"3GjX5":[function(require,module,exports) {
+},{"react-refresh/runtime":"786KC"}],"eGE3a":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Currencies", ()=>Currencies$1);
+parcelHelpers.export(exports, "CurrencyCalculatorInput", ()=>CurrencyCalculatorInput);
+parcelHelpers.export(exports, "CurrencyInput", ()=>CurrencyInput);
+parcelHelpers.export(exports, "Locales", ()=>Locales$1);
+parcelHelpers.export(exports, "NumberToString", ()=>NumberToString);
+parcelHelpers.export(exports, "StringFormatUSD", ()=>StringFormatUSD);
+parcelHelpers.export(exports, "basicCalculator", ()=>basicCalculator);
+parcelHelpers.export(exports, "extractNumberFromMathematicExpression", ()=>extractNumberFromMathematicExpression);
+parcelHelpers.export(exports, "removeNonMathematicOperation", ()=>removeNonMathematicOperation);
+parcelHelpers.export(exports, "removeNonNumerics", ()=>removeNonNumerics);
+parcelHelpers.export(exports, "removeNonNumericsExceptDash", ()=>removeNonNumericsExceptDash);
+parcelHelpers.export(exports, "stringToCurrency", ()=>stringToCurrency);
+parcelHelpers.export(exports, "useCurrencyFormat", ()=>useCurrencyFormat);
+parcelHelpers.export(exports, "useCurrencyFormatCalculator", ()=>useCurrencyFormatCalculator);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+function _extends() {
+    _extends = Object.assign || function(target) {
+        for(var i = 1; i < arguments.length; i++){
+            var source = arguments[i];
+            for(var key in source)if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+        }
+        return target;
+    };
+    return _extends.apply(this, arguments);
+}
+function _objectWithoutPropertiesLoose(source, excluded) {
+    if (source == null) return {};
+    var target = {};
+    var sourceKeys = Object.keys(source);
+    var key, i;
+    for(i = 0; i < sourceKeys.length; i++){
+        key = sourceKeys[i];
+        if (excluded.indexOf(key) >= 0) continue;
+        target[key] = source[key];
+    }
+    return target;
+}
+// remove everything except numerics
+function removeNonNumerics(raw) {
+    return raw ? raw.replace(/[^0-9]/g, "") : "";
+}
+/*eslint-disable */ // remove everything except numerics and dash
+function removeNonNumericsExceptDash(raw) {
+    return raw ? raw.replace(/[^\d-]/g, "") : "";
+} // remove leading zeroes
+function removeLeadingZeroes(val) {
+    return val ? val.replace(/^0+/, "") : "";
+} // string has operator
+function removeNonMathematicOperation(val) {
+    return val ? val.replace(/[^0-9\+\-\*\/\.\,]/g, "") : val;
+} // string has operator
+function isMathematicOperation(val) {
+    return val.match(/^[-+]?(\d+[.,]?)+\d*[-+/*]+(\d+[.,]?)+\d*[-+/*=]+$/g) !== null;
+}
+/*eslint-enable */ // string has operator
+function isMathematicOperator(val) {
+    return val.match(/[-+/*]/g) !== null;
+}
+function stringToCurrency(numberNum, precision) {
+    var operator = numberNum.charAt(0) === "-" ? "-" : "";
+    var onlyNumber = removeNonNumerics(numberNum);
+    var decimalParcel = onlyNumber.substring(onlyNumber.length - precision);
+    if (decimalParcel.length < precision) {
+        var zeros = Array.from({
+            length: precision - decimalParcel.length
+        }, function(_) {
+            return "0";
+        }).join("");
+        decimalParcel = "" + zeros + decimalParcel;
+    }
+    var integerParcel = onlyNumber.substring(0, onlyNumber.length - precision) || "0";
+    return "" + operator + integerParcel + "." + decimalParcel;
+}
+var math_it_up = {
+    "+": function _(x, y) {
+        return parseFloat(x) + parseFloat(y);
+    },
+    "-": function _(x, y) {
+        return parseFloat(x) - parseFloat(y);
+    },
+    x: function x(_x, y) {
+        return parseFloat(_x) * parseFloat(y);
+    },
+    "*": function _(x, y) {
+        return parseFloat(x) * parseFloat(y);
+    },
+    "/": function _(x, y) {
+        return y === "0" ? 0.0 : parseFloat(x) / parseFloat(y);
+    },
+    "\xf7": function _(x, y) {
+        return y === "0" ? 0.0 : parseFloat(x) / parseFloat(y);
+    }
+};
+var NumberToString = function NumberToString(numberNum, precision) {
+    var round = Math.pow(10, precision);
+    var splitNum = String((Math.round(numberNum * round) / round).toFixed(precision)).split(".");
+    var sinal = "";
+    var numberInter = splitNum[0];
+    if ([
+        "+",
+        "-"
+    ].includes(splitNum[0][0])) {
+        sinal = splitNum[0][0];
+        numberInter = splitNum[0].substr(1);
+    }
+    numberInter = numberInter.split(/(?=(?:...)*$)/).join(".");
+    if (splitNum.length > 1) return "" + sinal + numberInter + "." + splitNum[1];
+    return "" + sinal + numberInter;
+};
+function StringFormatUSD(numberString, precision) {
+    var onlyNumberOne = removeNonNumericsExceptDash(numberString);
+    if (precision > 0) {
+        var fractionalNumOne = onlyNumberOne.slice(precision * -1);
+        var integerDigitsNumOne = onlyNumberOne.slice(0, precision * -1);
+        return integerDigitsNumOne + "." + fractionalNumOne;
+    }
+    return onlyNumberOne;
+}
+function basicCalculator(operation, numberOne, numberTwo, precision) {
+    var numOne = StringFormatUSD(numberOne, precision);
+    var numTwo = numberTwo;
+    if (operation === "+" || operation === "-") numTwo = StringFormatUSD(numberTwo, precision);
+    else if (numberTwo.includes(".") && numberTwo.includes(",")) {
+        var _ref = [
+            numberTwo.lastIndexOf("."),
+            numberTwo.lastIndexOf(",")
+        ], lastdot = _ref[0], lastcomma = _ref[1];
+        if (lastdot > lastcomma) {
+            numberTwo = numberTwo.split(",").join("");
+            numberTwo = "" + numberTwo.substring(0, lastdot).split(".").join("") + numberTwo.substring(lastdot);
+        } else {
+            numberTwo = numberTwo.split(".").join("");
+            numberTwo = "" + numberTwo.substring(0, lastcomma).split(",").join("") + numberTwo.substring(lastcomma);
+        }
+    }
+    var total = Number(math_it_up[operation](numOne, numTwo));
+    return NumberToString(total, precision);
+}
+function extractNumberFromMathematicExpression(value) {
+    var dash = value.charAt(0) === "-" ? "-" : "";
+    var valueWithoutSignal = dash ? value.replace(/\s/g, "").substring(1) : value.replace(/\s/g, "");
+    var lastOperator = [
+        "-",
+        "+",
+        "/",
+        "*"
+    ].find(function(op) {
+        return valueWithoutSignal.includes(op);
+    });
+    if (lastOperator) {
+        var values = valueWithoutSignal.split(lastOperator);
+        var firstValue = "" + dash + values[0];
+        var lastValue = values[values.length - 1];
+        return {
+            firstValue: firstValue,
+            lastValue: lastValue,
+            operation: lastOperator
+        };
+    }
+    return null;
+}
+function removeEmpty(obj) {
+    if (obj === undefined) return undefined;
+    Object.keys(obj).forEach(function(key) {
+        if (obj[key] && typeof obj[key] === "object") removeEmpty(obj[key]);
+        else if (obj[key] === undefined) delete obj[key];
+    });
+    return obj;
+}
+function replaceAllCalc(value) {
+    if (value.includes("x")) value = value.split("x").join("*");
+    if (value.includes("\xf7")) value = value.split("\xf7").join("/");
+    return value;
+}
+function replaceAllNoCalc(value) {
+    if (value.includes("*")) value = value.split("*").join("x");
+    if (value.includes("/")) value = value.split("/").join("\xf7");
+    return value;
+}
+function deepClone(obj) {
+    // Se não for array ou objeto, retorna null
+    if (typeof obj !== "object" || obj === null) return obj;
+    var cloned, i; // Handle: Date
+    if (obj instanceof Date) {
+        cloned = new Date(obj.getTime());
+        return cloned;
+    } // Handle: array
+    if (obj instanceof Array) {
+        var l;
+        cloned = [];
+        for(i = 0, l = obj.length; i < l; i++)cloned[i] = deepClone(obj[i]);
+        return cloned;
+    } // Handle: object
+    cloned = {};
+    for(i in obj)if (obj.hasOwnProperty(i)) cloned[i] = deepClone(obj[i]);
+    return cloned;
+}
+var DefaultFormatProps = {
+    precision: 2,
+    style: "currency",
+    locale: "pt-BR",
+    i18nCurrency: "BRL",
+    allowNegative: true,
+    alwaysNegative: false,
+    onChangeCallBack: function onChangeCallBack() {}
+};
+function useCurrencyFormat(initialValue, options) {
+    if (initialValue === void 0) initialValue = "000";
+    var _useState = (0, _react.useState)(""), currency = _useState[0], setCurrency = _useState[1];
+    var _Object$assign = Object.assign(deepClone(DefaultFormatProps), removeEmpty(options)), precision = _Object$assign.precision, style = _Object$assign.style, locale = _Object$assign.locale, i18nCurrency = _Object$assign.i18nCurrency, allowNegative = _Object$assign.allowNegative, alwaysNegative = _Object$assign.alwaysNegative, onChangeCallBack = _Object$assign.onChangeCallBack; // format string to currency
+    var formatCurrency = (0, _react.useCallback)(function(rawVal) {
+        return Number(stringToCurrency(rawVal, precision)).toLocaleString(locale, {
+            style: style,
+            currency: i18nCurrency,
+            minimumIntegerDigits: 1,
+            minimumFractionDigits: precision
+        });
+    }, [
+        precision,
+        style,
+        locale,
+        i18nCurrency
+    ]); // initialize
+    (0, _react.useEffect)(function() {
+        var operator = initialValue.charAt(0) === "-" || alwaysNegative ? "-" : "";
+        setCurrency("" + operator + formatCurrency(removeNonNumerics(initialValue)));
+    }, [
+        initialValue,
+        alwaysNegative,
+        formatCurrency
+    ]);
+    var callbackChange = (0, _react.useCallback)(function(inputElement, maskedValue) {
+        onChangeCallBack(inputElement, maskedValue, stringToCurrency(maskedValue, precision));
+    }, [
+        precision,
+        onChangeCallBack
+    ]); // removeNonNumerics any entered value
+    var onChange = (0, _react.useCallback)(function(e) {
+        e.preventDefault();
+        var value = e.currentTarget.value;
+        var lastEntry = value.substring(value.length - 1);
+        if (!alwaysNegative && allowNegative) {
+            var hasDash = value.charAt(0);
+            if (lastEntry === "-" && hasDash !== "-") value = "-" + value.split("-").join("");
+            else if (lastEntry === "+" || lastEntry === "-") value = "" + value.split("-").join("");
+        }
+        var newValue = formatCurrency(removeNonNumericsExceptDash(value));
+        callbackChange(e.currentTarget, newValue);
+        setCurrency(newValue);
+    }, [
+        alwaysNegative,
+        allowNegative,
+        callbackChange,
+        formatCurrency
+    ]); // handle click
+    var onClick = (0, _react.useCallback)(function(e) {
+        // cursor to right
+        e.currentTarget.setSelectionRange(currency.length, currency.length);
+    }, [
+        currency
+    ]); // handle detection of delete
+    var onKeyDown = (0, _react.useCallback)(function(e) {
+        if ([
+            "Backspace",
+            "Delete"
+        ].includes(e.key)) {
+            e.preventDefault();
+            var sanitized = removeLeadingZeroes(removeNonNumerics(currency));
+            var newValue = "";
+            if (sanitized.length > 1) {
+                var operation = currency.charAt(0) === "-" ? "-" : "";
+                var value = "" + operation + sanitized.substring(0, sanitized.length - 1);
+                newValue = formatCurrency(value);
+            } else {
+                var zeros = formatCurrency(Array.from({
+                    length: precision + 1
+                }, function(_) {
+                    return "0";
+                }).join(""));
+                newValue = "" + (alwaysNegative ? "-" : "") + zeros;
+            }
+            callbackChange(e.currentTarget, newValue);
+            setCurrency(formatCurrency(newValue));
+        } // keep cursor in the right
+        e.currentTarget.setSelectionRange(currency.length, currency.length);
+    }, [
+        currency,
+        precision,
+        alwaysNegative,
+        callbackChange,
+        formatCurrency
+    ]);
+    return [
+        currency,
+        onChange,
+        onKeyDown,
+        onClick
+    ];
+}
+var CurrencyInput = /*#__PURE__*/ (0, _reactDefault.default).memo(/*#__PURE__*/ (0, _reactDefault.default).forwardRef(function(props, ref) {
+    var value = props.value, options = props.options, onChangeEvent = props.onChangeEvent, otherProps = _objectWithoutPropertiesLoose(props, [
+        "children",
+        "value",
+        "options",
+        "onChangeEvent"
+    ]);
+    var _useCurrencyFormat = useCurrencyFormat(value, _extends({}, options, {
+        onChangeCallBack: onChangeEvent
+    })), formattedValue = _useCurrencyFormat[0], handleOnChange = _useCurrencyFormat[1], handleOnKeyDown = _useCurrencyFormat[2], handleOnClick = _useCurrencyFormat[3];
+    return (0, _reactDefault.default).createElement("input", Object.assign({
+        style: {
+            textAlign: "right"
+        }
+    }, otherProps, {
+        type: "text",
+        onChange: handleOnChange,
+        onKeyDown: handleOnKeyDown,
+        onClick: handleOnClick,
+        value: formattedValue,
+        ref: ref
+    }));
+}));
+(function() {
+    if (typeof window.CustomEvent === "function") return false; //If not IE
+    function CustomEvent(event, params) {
+        params = params || {
+            bubbles: false,
+            cancelable: false,
+            detail: undefined
+        };
+        var evt = document.createEvent("CustomEvent");
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+        return evt;
+    }
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent;
+    window.Event = CustomEvent;
+})();
+if (!Array.prototype.includes) Array.prototype.includes = function(str) {
+    var returnValue = false;
+    if (this.indexOf(str) !== -1) returnValue = true;
+    return returnValue;
+};
+if (!String.prototype.includes) String.prototype.includes = function(str) {
+    var returnValue = false;
+    if (this.indexOf(str) !== -1) returnValue = true;
+    return returnValue;
+};
+if (!Array.prototype.find) Array.prototype.find = function(predicate) {
+    if (this == null) throw new TypeError("Array.prototype.find called on null or undefined");
+    if (typeof predicate !== "function") throw new TypeError("predicate must be a function");
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
+    for(var i = 0; i < length; i++)if (i in list) {
+        value = list[i];
+        if (predicate.call(thisArg, value, i, list)) return value;
+    }
+    return undefined;
+};
+var DefaultFormatProps$1 = {
+    precision: 2,
+    style: "currency",
+    locale: "pt-BR",
+    i18nCurrency: "BRL",
+    onChangeCallBack: function onChangeCallBack() {}
+};
+function useCurrencyFormatCalculator(initialValue, options) {
+    if (initialValue === void 0) initialValue = "000";
+    var _useState = (0, _react.useState)(""), currency = _useState[0], setCurrency = _useState[1];
+    var _Object$assign = Object.assign(deepClone(DefaultFormatProps$1), removeEmpty(options)), precision = _Object$assign.precision, style = _Object$assign.style, locale = _Object$assign.locale, i18nCurrency = _Object$assign.i18nCurrency, onChangeCallBack = _Object$assign.onChangeCallBack; // format string to currency
+    var formatCurrency = (0, _react.useCallback)(function(rawVal, styleCurrency) {
+        if (styleCurrency === void 0) styleCurrency = "decimal";
+        return Number(stringToCurrency(rawVal, precision)).toLocaleString(locale, {
+            style: styleCurrency,
+            currency: i18nCurrency,
+            minimumIntegerDigits: 1,
+            minimumFractionDigits: precision
+        });
+    }, [
+        precision,
+        i18nCurrency,
+        locale
+    ]); // initialize
+    (0, _react.useEffect)(function() {
+        setCurrency(formatCurrency(removeLeadingZeroes(removeNonNumericsExceptDash(initialValue)), style));
+    }, [
+        initialValue,
+        style,
+        formatCurrency
+    ]);
+    var callbackChange = (0, _react.useCallback)(function(inputElement, maskedValue) {
+        onChangeCallBack(inputElement, maskedValue, stringToCurrency(maskedValue, precision));
+    }, [
+        precision,
+        onChangeCallBack
+    ]); // removeNonNumerics any entered value
+    var onChange = (0, _react.useCallback)(function(e) {
+        e.preventDefault();
+        var value = replaceAllCalc(e.currentTarget.value);
+        var newValue = value;
+        var lastChar = value.slice(-1);
+        if ([
+            "-",
+            "+",
+            "/",
+            "*",
+            "="
+        ].includes(lastChar)) {
+            if (isMathematicOperation(value.replace(/\s/g, ""))) {
+                var values = extractNumberFromMathematicExpression(value.slice(0, -1));
+                if (values) {
+                    var total = basicCalculator(values.operation, values.firstValue, values.lastValue, precision);
+                    if (lastChar === "=") newValue = formatCurrency(total, style);
+                    else newValue = formatCurrency(total) + " " + lastChar + " ";
+                }
+            } else {
+                var onlyOperation = removeNonMathematicOperation(value);
+                if (lastChar === "=") newValue = formatCurrency(removeNonNumericsExceptDash(onlyOperation), style);
+                else {
+                    var dash = onlyOperation.charAt(0) === "-" ? "-" : "";
+                    var lastTwoCharacter = onlyOperation.replace(/\s/g, "").slice(-2);
+                    var charToRemove = isMathematicOperator(lastTwoCharacter[0]) ? lastTwoCharacter[0] : "";
+                    var valueWithoutOperator = onlyOperation.split(charToRemove).join("").trim();
+                    valueWithoutOperator = valueWithoutOperator.charAt(0) === "-" ? valueWithoutOperator.substring(1) : valueWithoutOperator;
+                    newValue = "" + dash + valueWithoutOperator.split(lastChar).join("").trim() + " " + lastChar + " ";
+                }
+            }
+        } else {
+            var _values = extractNumberFromMathematicExpression(value);
+            if (_values) {
+                var lastValue = removeNonMathematicOperation(_values.lastValue);
+                if ([
+                    "-",
+                    "+"
+                ].includes(_values.operation)) lastValue = formatCurrency(removeNonNumerics(_values.lastValue));
+                newValue = _values.firstValue + " " + _values.operation + " " + lastValue;
+            } else newValue = formatCurrency(removeNonNumericsExceptDash(value), style);
+        }
+        newValue = replaceAllNoCalc(newValue);
+        callbackChange(e.currentTarget, newValue);
+        setCurrency(newValue);
+    }, [
+        precision,
+        style,
+        callbackChange,
+        formatCurrency
+    ]); // handle click
+    var onClick = (0, _react.useCallback)(function(e) {
+        var value = e.currentTarget.value; // cursor to right
+        e.currentTarget.setSelectionRange(value.length, value.length);
+    }, []); // handle detection of delete
+    var onKeyDown = (0, _react.useCallback)(function(e) {
+        var value = replaceAllCalc(e.currentTarget.value);
+        if ([
+            "Delete",
+            "Backspace"
+        ].includes(e.key)) {
+            e.preventDefault();
+            var newValue = value;
+            if (value.length > 1) {
+                var valueWithoutSignal = value.replace(/\s/g, "").substring(1);
+                var operator = [
+                    "-",
+                    "+",
+                    "/",
+                    "*"
+                ].find(function(op) {
+                    return valueWithoutSignal.includes(op);
+                });
+                var newCurrencyValue = value.substring(0, value.length - 1);
+                if (operator) {
+                    var values = extractNumberFromMathematicExpression(value.slice(0, -1));
+                    if (values) {
+                        var zeros = Array.from({
+                            length: precision
+                        }, function(_) {
+                            return "0";
+                        }).join("");
+                        if (removeNonNumerics(values.lastValue) === zeros) newValue = values.firstValue + " " + values.operation;
+                        else if (values.lastValue === "") newValue = formatCurrency(values.firstValue, style);
+                        else {
+                            var lastValue = removeNonMathematicOperation(values.lastValue);
+                            if ([
+                                "-",
+                                "+"
+                            ].includes(values.operation)) lastValue = formatCurrency(values.lastValue);
+                            newValue = values.firstValue + " " + values.operation + " " + lastValue;
+                        }
+                    } else newValue = newCurrencyValue.trim();
+                } else {
+                    var _zeros = Array.from({
+                        length: precision
+                    }, function(_) {
+                        return "0";
+                    }).join("");
+                    var removeDash = removeNonNumericsExceptDash(newCurrencyValue) === "-" + _zeros ? removeNonNumerics(newCurrencyValue) : removeNonNumericsExceptDash(newCurrencyValue);
+                    newValue = formatCurrency(removeDash, style);
+                }
+            } else {
+                var zerosFormatted = formatCurrency(Array.from({
+                    length: precision + 1
+                }, function(_) {
+                    return "0";
+                }).join(""), style);
+                newValue = zerosFormatted;
+            }
+            newValue = replaceAllNoCalc(newValue);
+            callbackChange(e.currentTarget, newValue);
+            setCurrency(newValue);
+        } // keep cursor in the right
+        e.currentTarget.setSelectionRange(value.length, value.length);
+    }, [
+        precision,
+        style,
+        callbackChange,
+        formatCurrency
+    ]);
+    return [
+        currency,
+        onChange,
+        onKeyDown,
+        onClick
+    ];
+}
+var CurrencyCalculatorInput = /*#__PURE__*/ (0, _reactDefault.default).memo(/*#__PURE__*/ (0, _reactDefault.default).forwardRef(function(props, ref) {
+    var value = props.value, options = props.options, onChangeEvent = props.onChangeEvent, otherProps = _objectWithoutPropertiesLoose(props, [
+        "children",
+        "value",
+        "options",
+        "onChangeEvent"
+    ]);
+    var _useCurrencyFormatCal = useCurrencyFormatCalculator(value, _extends({}, options, {
+        onChangeCallBack: onChangeEvent
+    })), formattedValue = _useCurrencyFormatCal[0], handleOnChange = _useCurrencyFormatCal[1], handleOnKeyDown = _useCurrencyFormatCal[2], handleOnClick = _useCurrencyFormatCal[3];
+    return (0, _reactDefault.default).createElement("input", Object.assign({
+        style: {
+            textAlign: "right"
+        }
+    }, otherProps, {
+        type: "text",
+        onChange: handleOnChange,
+        onKeyDown: handleOnKeyDown,
+        onClick: handleOnClick,
+        value: formattedValue,
+        ref: ref
+    }));
+}));
+var Currencies;
+(function(Currencies) {
+    Currencies["Australian Dollar"] = "AUD";
+    Currencies["Brazilian Real"] = "BRL";
+    Currencies["Canadian Dollar"] = "CAD";
+    Currencies["Euro"] = "EUR";
+    Currencies["Pound Sterling"] = "GBP";
+    Currencies["Japan Yen"] = "JPY ";
+    Currencies["US Dollar"] = "USD";
+    Currencies["Swiss Franc"] = "CHF";
+})(Currencies || (Currencies = {}));
+var Currencies$1 = Currencies;
+var Locales;
+(function(Locales) {
+    Locales["English"] = "en";
+    Locales["English (Australia)"] = "en-AU";
+    Locales["English (Canada)"] = "en-CA";
+    Locales["English (United Kingdom)"] = "en-GB";
+    Locales["English (United States)"] = "en-US";
+    Locales["French (Canada)"] = "fr-CA";
+    Locales["Spanish"] = "es";
+    Locales["Swiss German"] = "gsw";
+    Locales["Swiss German (Switzerland)"] = "gsw-CH";
+    Locales["Italian"] = "it";
+    Locales["Italian (Italy)"] = "it-IT";
+    Locales["Japanese (Japan)"] = "ja-JP";
+    Locales["Japanese"] = "ja";
+    Locales["Portuguese (Brazil)"] = "pt-BR";
+    Locales["Portuguese (Portugal)"] = "pt-PT";
+    Locales["Portuguese"] = "pt";
+})(Locales || (Locales = {}));
+var Locales$1 = Locales;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1pE1D":[function() {},{}],"3GjX5":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$4803 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;

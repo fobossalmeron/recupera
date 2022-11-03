@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import Wrapper from "./shared/Wrapper";
-import { Field, OuterField } from "./shared/Field";
-import CTA from "./shared/CTA";
-import delayForLoading from "../utils/delayForLoading";
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+import Wrapper from './shared/Wrapper';
+import { Field, OuterField } from './shared/Field';
+import CTA from './shared/CTA';
+import delayForLoading from '../utils/delayForLoading';
+import { CurrencyInput } from 'input-currency-react';
+import './Field.css';
 
 const Tabla = [
   {
@@ -79,14 +81,15 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
   const [sueldo, setSueldo] = useState(0);
   const [saldoAFavor, setSaldoAFavor] = useState(0);
   const {
+    control,
     register,
     formState: { isDirty, isValid },
     handleSubmit,
-  } = useForm({ mode: "onChange" });
+  } = useForm({ mode: 'onChange' });
 
   const onSubmit = (data) => {
     switchForm(true);
-    delayForLoading(300).then(() => setSueldo(+data.sueldo));
+    // delayForLoading(300).then(() => setSueldo(+data.sueldo));
     delayForLoading(500).then(() => setAreWeDone(true));
   };
 
@@ -140,116 +143,129 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
     let ISRdelEjercicio = ISRaCargo - ISRretenido;
 
     console.log(
-      "\n" +
-        "\n\n" +
-        "Salario mensual bruto $" +
+      '\n' +
+        '\n\n' +
+        'Salario mensual bruto $' +
         sueldo.toLocaleString() +
-        "\n\n" +
-        "Rubro                  Sin deducciones     Con deducciones" +
-        "\n\n" +
-        "Ingresos gravables     $" +
+        '\n\n' +
+        'Rubro                  Sin deducciones     Con deducciones' +
+        '\n\n' +
+        'Ingresos gravables     $' +
         ingresosGravables.toLocaleString() +
-        "            $" +
+        '            $' +
         ingresosGravables.toLocaleString() +
-        "\n" +
-        "Deducciones personales $" +
+        '\n' +
+        'Deducciones personales $' +
         r_deduccionesPersonales.toLocaleString() +
-        "                  $" +
+        '                  $' +
         deduccionesPersonales.toLocaleString() +
-        "\n" +
-        "Base gravable          $" +
+        '\n' +
+        'Base gravable          $' +
         r_baseGravable.toLocaleString() +
-        "            $" +
+        '            $' +
         baseGravable.toLocaleString() +
-        "\n" +
-        "Límite inferior        $" +
+        '\n' +
+        'Límite inferior        $' +
         r_limiteInferior.toLocaleString() +
-        "         $" +
+        '         $' +
         limiteInferior.toLocaleString() +
-        "\n" +
-        "Excedente              $" +
+        '\n' +
+        'Excedente              $' +
         r_excedente.toLocaleString() +
-        "           $" +
+        '           $' +
         excedente.toLocaleString() +
-        "\n" +
-        "Porcentaje             " +
+        '\n' +
+        'Porcentaje             ' +
         r_porcentaje.toLocaleString() +
-        "%                 " +
+        '%                 ' +
         porcentaje.toLocaleString() +
-        "%" +
-        "\n" +
-        "Impuesto marginal      $" +
+        '%' +
+        '\n' +
+        'Impuesto marginal      $' +
         r_impuestoMarginal.toLocaleString() +
-        "            $" +
+        '            $' +
         impuestoMarginal.toLocaleString() +
-        "\n" +
-        "cuotaFija              $" +
+        '\n' +
+        'cuotaFija              $' +
         r_cuotaFija.toLocaleString() +
-        "            $" +
+        '            $' +
         cuotaFija.toLocaleString() +
-        "\n" +
-        "ISR a cargo            $" +
+        '\n' +
+        'ISR a cargo            $' +
         r_ISRaCargo.toLocaleString() +
-        "         $" +
+        '         $' +
         ISRaCargo.toLocaleString() +
-        "\n" +
-        "ISR retenido           $" +
+        '\n' +
+        'ISR retenido           $' +
         r_ISRretenido.toLocaleString() +
-        "         $" +
+        '         $' +
         ISRretenido.toLocaleString() +
-        "\n" +
-        "ISR del ejercicio      $" +
+        '\n' +
+        'ISR del ejercicio      $' +
         r_ISRdelEjercicio.toLocaleString() +
-        "           $" +
+        '           $' +
         ISRdelEjercicio.toLocaleString()
     );
     setSaldoAFavor(
-      (ISRdelEjercicio * -1).toLocaleString("es-MX", {
+      (ISRdelEjercicio * -1).toLocaleString('es-MX', {
         maximumFractionDigits: 0,
       })
     );
   }, [sueldo]);
 
-  const focusOnEnter = () => {
-    document.getElementsByName("sueldo")[0].focus();
+  const handleOnChange = (inputElement, maskedValue, value) => {
+    setSueldo(+value);
+    console.log(maskedValue, value);
   };
 
   return (
-    <Wrapper show onMouseEnter={focusOnEnter}>
+    <Wrapper show>
       <div>
         <Tag>Saldo a favor</Tag>
-        <SaldoNumber>{areWeDone ? "$" + saldoAFavor : "$00,000"}</SaldoNumber>
+        <SaldoNumber>{areWeDone ? '$' + saldoAFavor : '$00,000'}</SaldoNumber>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <OuterField>
           <label htmlFor={`cp_sueldo`}>
             {areWeDone
-              ? "Recuperable del SAT con un sueldo mensual de "
-              : "Ingresa tu sueldo mensual"}
+              ? 'Recuperable del SAT con un sueldo mensual de '
+              : 'Ingresa tu sueldo mensual'}
           </label>
           {areWeDone && (
             <NonEditable>
-              ${sueldo.toLocaleString("es-MX", { maximumFractionDigits: 0 })}
+              ${sueldo.toLocaleString('es-MX', { maximumFractionDigits: 0 })}
             </NonEditable>
           )}
           {!areWeDone && (
-            <Field
-              name="sueldo"
-              hasOwnError={isDirty && !isValid}
-              id={`cp_sueldo`}
-              type="number"
-              pattern="[0-9]*"
-              placeholder={"Sueldo mensual"}
-              {...register("sueldo", {
-                required: true,
-              })}
+            <CurrencyInput
+              style={{ width: 300 }}
+              options={{
+                precision: 3,
+                style: 'decimal',
+                locale: 'es-MX',
+                i18nCurrency: 'MXN',
+              }}
+              autoFocus={true}
+              onChangeEvent={handleOnChange}
             />
+
+            // <Field
+            //   name='sueldo'
+            //   hasOwnError={isDirty && !isValid}
+            //   id={`cp_sueldo`}
+            //   type='number'
+            //   pattern='[0-9]*'
+            //   placeholder={'Sueldo mensual'}
+            //   {...register('sueldo', {
+            //     required: true,
+            //   })}
+            // />
           )}
         </OuterField>
-        <CTA type="submit" value="Calcular" show={!areWeDone} />
+        <CTA type='submit' value='Calcular' show={!areWeDone} />
         <CTA
-          as="a"
-          href="https://recupera.io/prueba-la-versión-beta"
+          as='a'
+          href='https://recupera.io/prueba-la-versión-beta'
           show={areWeDone}
         >
           Únete el beta <Arrow />
@@ -278,7 +294,7 @@ const Arrow = styled.span`
   border-radius: 3px;
   &:before,
   &:after {
-    content: " ";
+    content: ' ';
     background-color: white;
     height: 2px;
     width: 10px;
@@ -298,7 +314,7 @@ const Arrow = styled.span`
 `;
 
 const Dollar = styled.span`
-  content: "$";
+  content: '$';
   color: black;
   position: absolute;
   display: block;
