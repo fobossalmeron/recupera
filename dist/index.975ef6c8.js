@@ -7679,7 +7679,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
     _s();
     const [sueldo, setSueldo] = (0, _react.useState)(0);
     const [saldoAFavor, setSaldoAFavor] = (0, _react.useState)(0);
-    const { control , register , formState: { isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)({
+    const { handleSubmit  } = (0, _reactHookForm.useForm)({
         mode: "onChange"
     });
     const onSubmit = (data)=>{
@@ -7732,7 +7732,6 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
     ]);
     const handleOnChange = (inputElement, maskedValue, value)=>{
         setSueldo(+value);
-        console.log(maskedValue, value);
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _wrapperDefault.default), {
         show: true,
@@ -7743,20 +7742,20 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                         children: "Saldo a favor"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 143,
+                        lineNumber: 136,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(SaldoNumber, {
                         children: areWeDone ? "$" + saldoAFavor : "$00,000"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 144,
+                        lineNumber: 137,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 142,
+                lineNumber: 135,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -7769,7 +7768,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 children: areWeDone ? "Recuperable del SAT con un sueldo mensual de " : "Ingresa tu sueldo mensual"
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 148,
+                                lineNumber: 141,
                                 columnNumber: 11
                             }, this),
                             areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NonEditable, {
@@ -7781,7 +7780,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 151,
+                                lineNumber: 144,
                                 columnNumber: 25
                             }, this),
                             !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _inputCurrencyReact.CurrencyInput), {
@@ -7798,13 +7797,13 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 onChangeEvent: handleOnChange
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 156,
+                                lineNumber: 149,
                                 columnNumber: 26
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 147,
+                        lineNumber: 140,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7813,7 +7812,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                         show: !areWeDone
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 178,
+                        lineNumber: 158,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7824,29 +7823,29 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                             "\xdanete el beta ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Arrow, {}, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 180,
+                                lineNumber: 160,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 179,
+                        lineNumber: 159,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 146,
+                lineNumber: 139,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/MainForm.js",
-        lineNumber: 141,
+        lineNumber: 134,
         columnNumber: 10
     }, this);
 }
-_s(MainForm, "b+DCTR9/4THjrzIdlvgF2vC+q64=", false, function() {
+_s(MainForm, "o7RRoFk6b4J2H1Mv75YEpj6cJO4=", false, function() {
     return [
         (0, _reactHookForm.useForm)
     ];

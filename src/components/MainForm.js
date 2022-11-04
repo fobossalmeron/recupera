@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import Wrapper from './shared/Wrapper';
-import { Field, OuterField } from './shared/Field';
+import { OuterField } from './shared/Field';
 import CTA from './shared/CTA';
 import delayForLoading from '../utils/delayForLoading';
 import { CurrencyInput } from 'input-currency-react';
@@ -80,12 +80,7 @@ const Tabla = [
 function MainForm({ switchForm, areWeDone, setAreWeDone }) {
   const [sueldo, setSueldo] = useState(0);
   const [saldoAFavor, setSaldoAFavor] = useState(0);
-  const {
-    control,
-    register,
-    formState: { isDirty, isValid },
-    handleSubmit,
-  } = useForm({ mode: 'onChange' });
+  const { handleSubmit } = useForm({ mode: 'onChange' });
 
   const onSubmit = (data) => {
     switchForm(true);
@@ -215,7 +210,6 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
 
   const handleOnChange = (inputElement, maskedValue, value) => {
     setSueldo(+value);
-    console.log(maskedValue, value);
   };
 
   return (
@@ -248,18 +242,6 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
               autoFocus={true}
               onChangeEvent={handleOnChange}
             />
-
-            // <Field
-            //   name='sueldo'
-            //   hasOwnError={isDirty && !isValid}
-            //   id={`cp_sueldo`}
-            //   type='number'
-            //   pattern='[0-9]*'
-            //   placeholder={'Sueldo mensual'}
-            //   {...register('sueldo', {
-            //     required: true,
-            //   })}
-            // />
           )}
         </OuterField>
         <CTA type='submit' value='Calcular' show={!areWeDone} />
