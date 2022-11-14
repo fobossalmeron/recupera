@@ -3,9 +3,10 @@ import styled from "styled-components";
 import Wrapper from "./shared/Wrapper";
 import { Field, OuterField } from "./shared/Field";
 import ErrorMessage from "./shared/ErrorMessage";
+import { createContact } from "../utils/sendinBlue";
 import CTA from "./shared/CTA";
 
-function PopupForm({ switchForm, show }) {
+function PopupForm({ switchForm, show, salario }) {
   const {
     register,
     formState: { errors, isDirty, isValid },
@@ -14,6 +15,14 @@ function PopupForm({ switchForm, show }) {
 
   const onSubmit = (data) => {
     console.log(data);
+    createContact({
+      email: data.email,
+      listIds: [2],
+      updateEnabled: true,
+      attributes: {
+        SUELDO: salario,
+      },
+    });
     switchForm(false);
   };
 

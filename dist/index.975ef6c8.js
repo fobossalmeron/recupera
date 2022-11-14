@@ -5642,6 +5642,7 @@ function App() {
     _s();
     const [form, setForm] = (0, _react.useState)(false);
     const [areWeDone, setAreWeDone] = (0, _react.useState)(false);
+    const [salario, setSalario] = (0, _react.useState)();
     const switchForm = (id)=>{
         setForm(id);
     };
@@ -5654,28 +5655,30 @@ function App() {
                 switchForm: switchForm,
                 show: !form,
                 areWeDone: areWeDone,
-                setAreWeDone: setAreWeDone
+                setAreWeDone: setAreWeDone,
+                setSalario: setSalario
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 13,
+                lineNumber: 14,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _popupFormDefault.default), {
                 switchForm: switchForm,
-                show: form
+                show: form,
+                salario: salario
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 14,
+                lineNumber: 15,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/App.js",
-        lineNumber: 12,
+        lineNumber: 13,
         columnNumber: 10
     }, this);
 }
-_s(App, "729jagbgczfSRvNPKEDbY+oXjEw=");
+_s(App, "oheRHkqVGN4BpSkBr6BWywCImGU=");
 _c = App;
 const Container = (0, _styledComponentsDefault.default).div.withConfig({
     displayName: "App__Container",
@@ -7490,7 +7493,7 @@ const Tabla = [
         porcentaje: 35.0
     }
 ];
-function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
+function MainForm({ switchForm , areWeDone , setAreWeDone , setSalario  }) {
     _s();
     const [sueldo, setSueldo] = (0, _react.useState)(0);
     const [saldoAFavor, setSaldoAFavor] = (0, _react.useState)(0);
@@ -7501,6 +7504,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
         switchForm(true);
         (0, _delayForLoadingDefault.default)(300).then(()=>setSueldo(+data.sueldo));
         (0, _delayForLoadingDefault.default)(500).then(()=>setAreWeDone(true));
+        setSalario(+data.sueldo);
     };
     const getChosenRow = (baseGrav)=>{
         let row = 0;
@@ -7546,7 +7550,8 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
         sueldo
     ]);
     const focusOnEnter = ()=>{
-        document.getElementsByName("sueldo")[0].focus();
+        let elem = document.getElementsByName("sueldo")[0];
+        elem && elem.focus();
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _wrapperDefault.default), {
         show: true,
@@ -7558,20 +7563,20 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                         children: "Saldo a favor"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 139,
+                        lineNumber: 142,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(SaldoNumber, {
                         children: areWeDone ? "$" + saldoAFavor : "$00,000"
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 140,
+                        lineNumber: 143,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 138,
+                lineNumber: 141,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -7584,7 +7589,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 children: areWeDone ? "Recuperable del SAT con un sueldo mensual de " : "Ingresa tu sueldo mensual"
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 144,
+                                lineNumber: 147,
                                 columnNumber: 11
                             }, this),
                             areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NonEditable, {
@@ -7596,7 +7601,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 147,
+                                lineNumber: 150,
                                 columnNumber: 25
                             }, this),
                             !areWeDone && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
@@ -7611,13 +7616,13 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                                 })
                             }, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 152,
+                                lineNumber: 155,
                                 columnNumber: 26
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 143,
+                        lineNumber: 146,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7626,7 +7631,7 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                         show: !areWeDone
                     }, void 0, false, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 156,
+                        lineNumber: 159,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -7637,25 +7642,25 @@ function MainForm({ switchForm , areWeDone , setAreWeDone  }) {
                             "\xdanete el beta ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Arrow, {}, void 0, false, {
                                 fileName: "src/components/MainForm.js",
-                                lineNumber: 158,
+                                lineNumber: 161,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/MainForm.js",
-                        lineNumber: 157,
+                        lineNumber: 160,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/MainForm.js",
-                lineNumber: 142,
+                lineNumber: 145,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/MainForm.js",
-        lineNumber: 137,
+        lineNumber: 140,
         columnNumber: 10
     }, this);
 }
@@ -9852,16 +9857,27 @@ var _wrapperDefault = parcelHelpers.interopDefault(_wrapper);
 var _field = require("./shared/Field");
 var _errorMessage = require("./shared/ErrorMessage");
 var _errorMessageDefault = parcelHelpers.interopDefault(_errorMessage);
+var _sendinBlue = require("../utils/sendinBlue");
 var _cta = require("./shared/CTA");
 var _ctaDefault = parcelHelpers.interopDefault(_cta);
 var _s = $RefreshSig$();
-function PopupForm({ switchForm , show  }) {
+function PopupForm({ switchForm , show , salario  }) {
     _s();
     const { register , formState: { errors , isDirty , isValid  } , handleSubmit  } = (0, _reactHookForm.useForm)({
         mode: "onBlur"
     });
     const onSubmit = (data)=>{
         console.log(data);
+        (0, _sendinBlue.createContact)({
+            email: data.email,
+            listIds: [
+                2
+            ],
+            updateEnabled: true,
+            attributes: {
+                SUELDO: salario
+            }
+        });
         switchForm(false);
     };
     const focusOnEnter = ()=>{
@@ -9878,13 +9894,13 @@ function PopupForm({ switchForm , show  }) {
                         children: "tu resultado"
                     }, void 0, false, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 31,
+                        lineNumber: 41,
                         columnNumber: 34
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/PopupForm.js",
-                lineNumber: 30,
+                lineNumber: 40,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -9897,7 +9913,7 @@ function PopupForm({ switchForm , show  }) {
                                 children: "Ingresa tu email"
                             }, void 0, false, {
                                 fileName: "src/components/PopupForm.js",
-                                lineNumber: 35,
+                                lineNumber: 45,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _field.Field), {
@@ -9915,20 +9931,20 @@ function PopupForm({ switchForm , show  }) {
                                 })
                             }, void 0, false, {
                                 fileName: "src/components/PopupForm.js",
-                                lineNumber: 36,
+                                lineNumber: 46,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 34,
+                        lineNumber: 44,
                         columnNumber: 9
                     }, this),
                     errors?.email?.type === "pattern" && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _errorMessageDefault.default), {
                         children: "Necesitamos un correo real \uD83D\uDE14"
                     }, void 0, false, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 44,
+                        lineNumber: 54,
                         columnNumber: 47
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _ctaDefault.default), {
@@ -9937,19 +9953,19 @@ function PopupForm({ switchForm , show  }) {
                         show: true
                     }, void 0, false, {
                         fileName: "src/components/PopupForm.js",
-                        lineNumber: 46,
+                        lineNumber: 56,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/components/PopupForm.js",
-                lineNumber: 33,
+                lineNumber: 43,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/components/PopupForm.js",
-        lineNumber: 29,
+        lineNumber: 39,
         columnNumber: 10
     }, this);
 }
@@ -9986,7 +10002,7 @@ $RefreshReg$(_c2, "Copy");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-hook-form":"kRky9","styled-components":"1U3k6","./shared/Wrapper":"4Zapv","./shared/Field":"eow5S","./shared/ErrorMessage":"krY43","./shared/CTA":"kttpQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"krY43":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-hook-form":"kRky9","styled-components":"1U3k6","./shared/Wrapper":"4Zapv","./shared/Field":"eow5S","./shared/ErrorMessage":"krY43","./shared/CTA":"kttpQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","../utils/sendinBlue":"eUMw1"}],"krY43":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _styledComponents = require("styled-components");
@@ -9999,7 +10015,62 @@ const ErrorMessage = (0, _styledComponentsDefault.default).div.withConfig({
 ]);
 exports.default = ErrorMessage;
 
-},{"styled-components":"1U3k6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lOjBx":[function(require,module,exports) {
+},{"styled-components":"1U3k6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eUMw1":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "capitalize", ()=>capitalize);
+parcelHelpers.export(exports, "capitalizeAll", ()=>capitalizeAll);
+parcelHelpers.export(exports, "createContact", ()=>createContact);
+parcelHelpers.export(exports, "updateContact", ()=>updateContact);
+const capitalize = ()=>{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
+const capitalizeAll = ()=>{
+    return string.split(" ").map(capitalize).join(" ");
+};
+const createContact = async (submittedData1)=>{
+    let { email , listIds , updateEnabled , attributes  } = submittedData1;
+    let requestOptions = {
+        method: "POST",
+        headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+            "api-key": undefined
+        },
+        body: JSON.stringify({
+            updateEnabled: updateEnabled,
+            email: email,
+            listIds: listIds,
+            attributes: {
+                ...attributes
+            }
+        })
+    };
+    const response = await fetch("https://api.sendinblue.com/v3/contacts", requestOptions);
+    console.log(requestOptions);
+    const data = await response;
+    return data;
+};
+const updateContact = async ()=>{
+    let { email , listIds , unlinkListIds  } = submittedData;
+    let requestOptions = {
+        method: "PUT",
+        headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+            "api-key": undefined
+        },
+        body: JSON.stringify({
+            listIds: listIds,
+            unlinkListIds: unlinkListIds
+        })
+    };
+    const response = await fetch(`https://api.sendinblue.com/v3/contacts/${email}`, requestOptions);
+    const data = await response;
+    return data;
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lOjBx":[function(require,module,exports) {
 "use strict";
 var m = require("react-dom");
 var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;

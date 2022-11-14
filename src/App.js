@@ -7,6 +7,8 @@ export function App() {
   const [form, setForm] = useState(false);
   const [areWeDone, setAreWeDone] = useState(false);
 
+  const [salario, setSalario] = useState();
+
   const switchForm = (id) => {
     setForm(id);
   };
@@ -21,8 +23,9 @@ export function App() {
         show={!form}
         areWeDone={areWeDone}
         setAreWeDone={setAreWeDone}
+        setSalario={setSalario}
       />
-      <PopupForm switchForm={switchForm} show={form} />
+      <PopupForm switchForm={switchForm} show={form} salario={salario}/>
     </Container>
   );
 }

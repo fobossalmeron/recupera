@@ -75,7 +75,7 @@ const Tabla = [
   },
 ];
 
-function MainForm({ switchForm, areWeDone, setAreWeDone }) {
+function MainForm({ switchForm, areWeDone, setAreWeDone, setSalario }) {
   const [sueldo, setSueldo] = useState(0);
   const [saldoAFavor, setSaldoAFavor] = useState(0);
   const {
@@ -88,6 +88,7 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
     switchForm(true);
     delayForLoading(300).then(() => setSueldo(+data.sueldo));
     delayForLoading(500).then(() => setAreWeDone(true));
+    setSalario(+data.sueldo);
   };
 
   const getChosenRow = (baseGrav) => {
@@ -211,7 +212,8 @@ function MainForm({ switchForm, areWeDone, setAreWeDone }) {
   }, [sueldo]);
 
   const focusOnEnter = () => {
-    document.getElementsByName("sueldo")[0].focus();
+    let elem = document.getElementsByName("sueldo")[0]
+    elem && elem.focus();
   };
 
   return (
